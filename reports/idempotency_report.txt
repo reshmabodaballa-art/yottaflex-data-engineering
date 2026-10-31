@@ -1,0 +1,21 @@
+# YottaFlex AI – Idempotency Test Report
+
+## Test Objective
+Verify that running the database loading script multiple times does not create duplicate records.
+
+## Test Results
+
+| Dataset | First Run | Second Run |
+|---|---:|---:|
+| Customers | 10 | 10 |
+| Products | 100 | 100 |
+| Orders | 100,000 | 100,000 |
+
+## Execution Time
+- First run: 0.4434 seconds
+- Second run: 0.2855 seconds
+
+## Conclusion
+The database loading script was executed twice using the same source CSV files. Record counts remained unchanged, confirming that duplicate primary keys were ignored and existing records were preserved.
+
+Idempotency test: PASSED.

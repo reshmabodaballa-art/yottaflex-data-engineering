@@ -1,0 +1,26 @@
+# YottaFlex AI - Automated Test Report
+
+**Testing Framework:** Pytest
+
+**Test Files:**
+- tests/test_data_quality.py
+- tests/test_idempotency.py
+
+## Test Results
+
+1. test_negative_and_zero_prices - PASSED
+2. test_duplicate_product_ids - PASSED
+3. test_empty_dataset - PASSED
+4. test_missing_product_name - PASSED
+5. test_invalid_order_quantity - PASSED
+6. test_invalid_order_dates - PASSED
+7. test_database_loading_is_idempotent - PASSED
+
+## Summary
+
+- Total Tests: 7
+- Passed: 7
+- Failed: 0
+- Execution Time: 3.09 seconds
+
+**Conclusion:** All seven automated tests passed successfully. The tests cover data-quality validation and database idempotency.

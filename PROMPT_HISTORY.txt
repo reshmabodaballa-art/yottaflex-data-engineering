@@ -1,0 +1,18 @@
+YottaFlex AI - AI Prompt History
+
+This file records the AI assistance used during project development.
+
+Prompt 1:
+Used AI to understand the project requirements and plan the data pipeline.
+
+Prompt 2:
+Used AI for guidance on creating synthetic customer, product, and order data.
+
+Prompt 3:
+Used AI for guidance on data validation and database loading.
+
+Prompt 4:
+Used AI for guidance on writing automated tests and checking idempotency.
+
+Prompt 5:
+Used AI for guidance on pipeline execution, logging, and documentation.

@@ -1,0 +1,24 @@
+YottaFlex AI - Data Validation Report
+
+Dataset Details:
+Customers: 10 records
+Products: 100 records
+Orders: 100,000 records
+
+Validation Results:
+
+Missing Values: 0
+Duplicate Customer IDs: 0
+Duplicate Product IDs: 0
+Duplicate Order IDs: 0
+
+Invalid Product Prices: 0
+Invalid Order Quantities: 0
+Invalid Order Dates: 0
+
+Invalid Customer References: 0
+Invalid Product References: 0
+
+Final Status: VALIDATION PASSED
+
+All data quality checks passed successfully.

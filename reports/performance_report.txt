@@ -1,0 +1,24 @@
+YottaFlex AI - SQL Performance Report
+
+Dataset:
+Orders: 100,000 records
+Products: 100 records
+
+SQL Query:
+Sales analysis by product category using JOIN, GROUP BY and ORDER BY.
+
+Performance Test:
+
+With Manual Index:
+Average execution time: 0.2352 seconds
+
+Without Manual Index:
+Average execution time: 0.0671 seconds
+
+Conclusion:
+The query without the manual index performed faster in our test.
+Therefore, we decided not to use the manual index for this query.
+
+Query Plan:
+SQLite scans the orders table and uses an automatic covering index
+to search matching products.

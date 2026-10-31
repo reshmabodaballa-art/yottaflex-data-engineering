@@ -1,0 +1,6 @@
+2026-10-31 20:15:02,816 - INFO - Pipeline started.
+2026-10-31 20:15:02,817 - INFO - Data validation started.
+2026-10-31 20:15:02,889 - INFO - Data validation passed.
+2026-10-31 20:15:03,166 - INFO - Database loading completed.
+2026-10-31 20:15:03,278 - INFO - Sales analysis completed.
+2026-10-31 20:15:03,279 - INFO - Pipeline completed successfully in 0.4619 seconds.

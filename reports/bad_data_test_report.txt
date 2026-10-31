@@ -1,0 +1,37 @@
+YottaFlex AI - Bad Data Testing Report
+
+Test Dataset:
+bad_products.csv
+
+Total Test Records: 5
+
+Test Results:
+
+1. Product 101 - Mobile
+   Price: 15000
+   Result: Duplicate product ID
+
+2. Product 102 - Laptop
+   Price: -500
+   Result: Invalid - Negative price
+
+3. Product 103 - Book
+   Price: 0
+   Result: Invalid - Zero price
+
+4. Product 104 - Chair
+   Price: 2500
+   Result: Valid
+
+5. Product 101 - Duplicate_Mobile
+   Price: 12000
+   Result: Invalid - Duplicate product ID
+
+Summary:
+Total records: 5
+Valid records: 1
+Invalid records: 4
+
+Conclusion:
+The tests successfully identified negative prices,
+zero prices, and duplicate product IDs.
