@@ -187,20 +187,20 @@ The project follows a simple ETL (Extract, Transform, Load) architecture.
 Synthetic Data Generation
           |
           v
-     CSV Input Files
+    CSV Input Files
           |
           v
-     Data Validation
+    Data Validation
           |
           v
-    SQLite Database
+   SQLite Database
           |
           v
-     Sales Analysis
+    Sales Analysis
           |
           v
-     Output Reports
-
+    Output Reports
+```
 
 \## Installation and Execution
 
@@ -212,8 +212,7 @@ Synthetic Data Generation
 
 ```bash
 
-git clone YOUR\_GITHUB\_REPOSITORY\_URL
-
+git clone https://github.com/reshmabodaballa-art/yottaflex-data-engineering.git
 cd yottaflex-data-engineering
 
 ```
