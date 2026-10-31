@@ -1,10 +1,10 @@
 
 
-\# YottaFlex AI - Data Engineering Pipeline
+# YottaFlex AI - Data Engineering Pipeline
 
 
 
-\## Project Overview
+## Project Overview
 
 
 
@@ -20,27 +20,27 @@ The project focuses on data quality, reproducibility, database integrity, automa
 
 
 
-\## Technologies Used
+## Technologies Used
 
 
 
-\- Python
+- Python
 
-\- Pandas
+- Pandas
 
-\- SQLite
+- SQLite
 
-\- SQL
+- SQL
 
-\- Pytest
+- Pytest
 
-\- Git
-
-
+- Git
 
 
 
-\## Project Structure
+
+
+## Project Structure
 
 
 
@@ -58,55 +58,55 @@ yottaflex-data-engineering/
 
 │   ├── orders.csv
 
-│   └── test\_data/
+│   └── test_data/
 
 │
 
 ├── src/
 
-│   ├── generate\_data.py
+│   ├── generate_data.py
 
-│   ├── generate\_products.py
+│   ├── generate_products.py
 
-│   ├── generate\_orders.py
+│   ├── generate_orders.py
 
-│   ├── validate\_data.py
+│   ├── validate_data.py
 
-│   ├── load\_database.py
+│   ├── load_database.py
 
-│   ├── sales\_analysis.py
+│   ├── sales_analysis.py
 
-│   └── run\_pipeline.py
+│   └── run_pipeline.py
 
 │
 
 ├── tests/
 
-│   ├── test\_data\_quality.py
+│   ├── test_data_quality.py
 
-│   └── test\_idempotency.py
+│   └── test_idempotency.py
 
 │
 
 ├── reports/
 
-│   ├── validation\_report.txt
+│   ├── validation_report.txt
 
-│   ├── automated\_test\_report.txt
+│   ├── automated_test_report.txt
 
-│   ├── performance\_report.txt
+│   ├── performance_report.txt
 
-│   ├── pipeline\_execution\_report.txt
+│   ├── pipeline_execution_report.txt
 
 │   ├── pipeline.log
 
-│   ├── sales\_analysis.csv
+│   ├── sales_analysis.csv
 
-│   ├── bad\_data\_test\_report.txt
+│   ├── bad_data_test_report.txt
 
-│   ├── idempotency\_report.txt
+│   ├── idempotency_report.txt
 
-│   └── data\_generator\_test\_report.txt     
+│   └── data_generator_test_report.txt     
 
 │
 
@@ -120,7 +120,7 @@ yottaflex-data-engineering/
 
 
 
-\## Pipeline Workflow
+## Pipeline Workflow
 
 
 
@@ -128,53 +128,53 @@ The pipeline executes the following stages:
 
 
 
-1\. \*\*Data Generation\*\*
+1. **Data Generation**
 
-&#x20;  - Generate synthetic customer data.
+  - Generate synthetic customer data.
 
-&#x20;  - Generate synthetic product data.
+  - Generate synthetic product data.
 
-&#x20;  - Generate synthetic order data.
+  - Generate synthetic order data.
 
-&#x20;  - Support configurable dataset sizes and fixed random seeds.
-
-
-
-2\. \*\*Data Validation\*\*
-
-&#x20;  - Check required columns.
-
-&#x20;  - Check missing values.
-
-&#x20;  - Detect duplicate IDs.
-
-&#x20;  - Validate product prices and order quantities.
-
-&#x20;  - Validate order dates and foreign-key references.
+  - Support configurable dataset sizes and fixed random seeds.
 
 
 
-3\. \*\*Database Loading\*\*
+2. **Data Validation**
 
-&#x20;  - Load validated data into SQLite.
+  - Check required columns.
 
-&#x20;  - Use primary keys and foreign keys.
+  - Check missing values.
 
-&#x20;  - Prevent duplicate records during reruns.
+  - Detect duplicate IDs.
 
+  - Validate product prices and order quantities.
 
-
-4\. \*\*Sales Analysis\*\*
-
-&#x20;  - Join orders with products.
-
-&#x20;  - Calculate sales by product category.
-
-&#x20;  - Export results to `reports/sales\_analysis.csv`.
+  - Validate order dates and foreign-key references.
 
 
 
-\## System Architecture
+3. **Database Loading**
+
+  - Load validated data into SQLite.
+
+  - Use primary keys and foreign keys.
+
+  - Prevent duplicate records during reruns.
+
+
+
+4. **Sales Analysis**
+
+  - Join orders with products.
+
+  - Calculate sales by product category.
+
+  - Export results to `reports/sales_analysis.csv`.
+
+
+
+## System Architecture
 
 
 
@@ -202,11 +202,11 @@ Synthetic Data Generation
     Output Reports
 ```
 
-\## Installation and Execution
+## Installation and Execution
 
 
 
-\### 1. Clone the repository
+### 1. Clone the repository
 
 
 
@@ -219,7 +219,7 @@ cd yottaflex-data-engineering
 
 
 
-\### 2. Create a virtual environment
+### 2. Create a virtual environment
 
 
 
@@ -231,7 +231,7 @@ python -m venv venv
 
 
 
-\### 3. Activate the environment
+### 3. Activate the environment
 
 
 
@@ -241,13 +241,13 @@ Windows:
 
 ```bash
 
-venv\\Scripts\\activate
+venv\Scripts\activate
 
 ```
 
 
 
-\### 4. Install dependencies
+### 4. Install dependencies
 
 
 
@@ -259,19 +259,19 @@ pip install -r requirements.txt
 
 
 
-\### 5. Run the complete pipeline
+### 5. Run the complete pipeline
 
 
 
 ```bash
 
-python src/run\_pipeline.py
+python src/run_pipeline.py
 
 ```
 
 
 
-\### 6. Run automated tests
+### 6. Run automated tests
 
 
 
@@ -283,7 +283,7 @@ pytest tests/ -v
 
 
 
-\### Synthetic Data Generation
+### Synthetic Data Generation
 
 
 
@@ -297,23 +297,23 @@ Examples:
 
 ```bash
 
-python src/generate\_data.py --num-customers 10 --seed 42
+python src/generate_data.py --num-customers 10 --seed 42
 
-python src/generate\_products.py --num-products 100 --seed 42
+python src/generate_products.py --num-products 100 --seed 42
 
-python src/generate\_orders.py --num-orders 100000 --num-customers 10 --num-products 100 --seed 42
+python src/generate_orders.py --num-orders 100000 --num-customers 10 --num-products 100 --seed 42
 
 ```
 
 
 
-\*\*Note:\*\* Run the generators with matching customer and product counts before regenerating orders, because orders reference customer and product IDs.
+**Note:** Run the generators with matching customer and product counts before regenerating orders, because orders reference customer and product IDs.
 
 
 
 
 
-\## Dataset Details
+## Dataset Details
 
 
 
@@ -333,11 +333,11 @@ The current project uses reproducible synthetic datasets.
 
 
 
-\## Data Dictionary
+## Data Dictionary
 
 
 
-\### Customers Dataset
+### Customers Dataset
 
 
 
@@ -345,15 +345,15 @@ The current project uses reproducible synthetic datasets.
 
 |---|---|---|
 
-| customer\_id | Integer | Unique customer ID |
+| customer_id | Integer | Unique customer ID |
 
-| customer\_name | Text | Customer name |
+| customer_name | Text | Customer name |
 
 | city | Text | Customer city |
 
 
 
-\### Products Dataset
+### Products Dataset
 
 
 
@@ -361,9 +361,9 @@ The current project uses reproducible synthetic datasets.
 
 |---|---|---|
 
-| product\_id | Integer | Unique product ID |
+| product_id | Integer | Unique product ID |
 
-| product\_name | Text | Product name |
+| product_name | Text | Product name |
 
 | category | Text | Product category |
 
@@ -371,7 +371,7 @@ The current project uses reproducible synthetic datasets.
 
 
 
-\### Orders Dataset
+### Orders Dataset
 
 
 
@@ -379,31 +379,31 @@ The current project uses reproducible synthetic datasets.
 
 |---|---|---|
 
-| order\_id | Integer | Unique order ID |
+| order_id | Integer | Unique order ID |
 
-| customer\_id | Integer | Customer ID linked to customers |
+| customer_id | Integer | Customer ID linked to customers |
 
-| product\_id | Integer | Product ID linked to products |
+| product_id | Integer | Product ID linked to products |
 
 | quantity | Integer | Number of items ordered |
 
-| order\_date | Date | Date of the order |
+| order_date | Date | Date of the order |
 
 
 
-\## Sample Input and Output
+## Sample Input and Output
 
 
 
-\### Sample Input
+### Sample Input
 
 
 
-The project includes a test file named `bad\_products.csv` to check invalid product records.
+The project includes a test file named `bad_products.csv` to check invalid product records.
 
 
 
-| product\_id | product\_name | category | price |
+| product_id | product_name | category | price |
 
 |---|---|---|---:|
 
@@ -415,25 +415,25 @@ The project includes a test file named `bad\_products.csv` to check invalid prod
 
 | 104 | Chair | Furniture | 2500 |
 
-| 101 | Duplicate\_Mobile | Electronics | 12000 |
+| 101 | Duplicate_Mobile | Electronics | 12000 |
 
 
 
-\### Sample Validation Results
+### Sample Validation Results
 
 
 
-\- Total records: 5
+- Total records: 5
 
-\- Valid records: 1
+- Valid records: 1
 
-\- Invalid records: 4
+- Invalid records: 4
 
-\- Issues detected: Negative price, zero price, and duplicate product ID.
+- Issues detected: Negative price, zero price, and duplicate product ID.
 
 
 
-\## Testing Results
+## Testing Results
 
 
 
@@ -441,35 +441,35 @@ Automated testing is performed using Pytest.
 
 
 
-\- Total tests: 7
+- Total tests: 7
 
-\- Passed: 7
+- Passed: 7
 
-\- Failed: 0
+- Failed: 0
 
-\- Latest recorded execution time: 3.09 seconds
+- Latest recorded execution time: 3.09 seconds
 
 
 
 Tests cover:
 
-\- Negative and zero product prices.
+- Negative and zero product prices.
 
-\- Duplicate product IDs.
+- Duplicate product IDs.
 
-\- Empty datasets.
+- Empty datasets.
 
-\- Missing product names.
+- Missing product names.
 
-\- Invalid order quantities.
+- Invalid order quantities.
 
-\- Invalid order dates.
+- Invalid order dates.
 
-\- Database loading idempotency.
+- Database loading idempotency.
 
 
 
-\## Pipeline Execution
+## Pipeline Execution
 
 
 
@@ -477,73 +477,73 @@ The complete pipeline was executed successfully twice.
 
 
 
-\- Data validation: Passed
+- Data validation: Passed
 
-\- Database loading: Passed
+- Database loading: Passed
 
-\- Sales analysis: Passed
+- Sales analysis: Passed
 
-\- Database record counts remained unchanged after rerunning.
-
-
-
-\## Output Files
+- Database record counts remained unchanged after rerunning.
 
 
 
-\- `yottaflex.db` - SQLite database.
-
-\- `reports/sales\_analysis.csv` - Sales analysis results.
-
-\- `reports/validation\_report.txt` - Data validation results.
-
-\- `reports/automated\_test\_report.txt` - Automated test results.
-
-\- `reports/performance\_report.txt` - SQL performance comparison.
-
-\- `reports/pipeline.log` - Automatic pipeline execution logs, status, and errors.
-
-\- `reports/pipeline\_execution\_report.txt` - Pipeline execution and rerun results.
+## Output Files
 
 
 
-\## Design Decisions and Trade-offs
+- `yottaflex.db` - SQLite database.
+
+- `reports/sales_analysis.csv` - Sales analysis results.
+
+- `reports/validation_report.txt` - Data validation results.
+
+- `reports/automated_test_report.txt` - Automated test results.
+
+- `reports/performance_report.txt` - SQL performance comparison.
+
+- `reports/pipeline.log` - Automatic pipeline execution logs, status, and errors.
+
+- `reports/pipeline_execution_report.txt` - Pipeline execution and rerun results.
 
 
 
-\- \*\*SQLite:\*\* Selected as a lightweight relational database for storing and querying project data.
-
-\- \*\*Pandas:\*\* Used for CSV processing, data validation, and report generation.
-
-\- \*\*Primary and Foreign Keys:\*\* Used to maintain database relationships and data integrity.
-
-\- \*\*Fixed Random Seed:\*\* Used to generate reproducible synthetic datasets.
-
-\- \*\*INSERT OR IGNORE:\*\* Used to prevent duplicate primary-key records during repeated database loads.
-
-\- \*\*Pytest:\*\* Used to automate data-quality and idempotency tests.
+## Design Decisions and Trade-offs
 
 
 
-\## Current Limitations and Future Improvements
+- **SQLite:** Selected as a lightweight relational database for storing and querying project data.
+
+- **Pandas:** Used for CSV processing, data validation, and report generation.
+
+- **Primary and Foreign Keys:** Used to maintain database relationships and data integrity.
+
+- **Fixed Random Seed:** Used to generate reproducible synthetic datasets.
+
+- **INSERT OR IGNORE:** Used to prevent duplicate primary-key records during repeated database loads.
+
+- **Pytest:** Used to automate data-quality and idempotency tests.
 
 
 
-\- Add automated rejection files for invalid records.
-
-\- Enhance run-status tracking with persistent execution metadata and row counts.
-
-\- Improve handling of partial failures and retries.
-
-\- Add schema-change detection and stricter data-type validation.
-
-\- Expand automated tests for foreign-key errors and malformed input files.
-
-\- Explore and measure further performance optimizations.
+## Current Limitations and Future Improvements
 
 
 
-\## Author
+- Add automated rejection files for invalid records.
+
+- Enhance run-status tracking with persistent execution metadata and row counts.
+
+- Improve handling of partial failures and retries.
+
+- Add schema-change detection and stricter data-type validation.
+
+- Expand automated tests for foreign-key errors and malformed input files.
+
+- Explore and measure further performance optimizations.
+
+
+
+## Author
 
 
 
