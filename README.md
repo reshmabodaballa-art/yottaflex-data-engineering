@@ -185,37 +185,21 @@ The project follows a simple ETL (Extract, Transform, Load) architecture.
 ```text
 
 Synthetic Data Generation
-
-&#x20;         |
-
-&#x20;         v
-
-&#x20;  CSV Input Files
-
-&#x20;         |
-
-&#x20;         v
-
-&#x20;   Data Validation
-
-&#x20;         |
-
-&#x20;         v
-
-&#x20;    SQLite Database
-
-&#x20;         |
-
-&#x20;         v
-
-&#x20;   Sales Analysis
-
-&#x20;         |
-
-&#x20;         v
-
-&#x20;   Output Reports
-
+          |
+          v
+     CSV Input Files
+          |
+          v
+     Data Validation
+          |
+          v
+    SQLite Database
+          |
+          v
+     Sales Analysis
+          |
+          v
+     Output Reports
 
 
 \## Installation and Execution
