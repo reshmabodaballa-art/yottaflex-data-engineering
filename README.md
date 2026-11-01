@@ -27,6 +27,10 @@ yottaflex-data-engineering/
 │   ├── products.csv
 │   └── orders.csv
 │
+├── docs/
+│   ├── architecture.md
+│   └── data_dictionary.md
+│
 ├── reports/
 │   ├── automated_test_report.txt
 │   ├── performance_report.txt
@@ -36,19 +40,25 @@ yottaflex-data-engineering/
 │   └── sales_analysis.csv
 │
 ├── src/
+│   ├── __init__.py
+│   ├── checkpoint_manager.py
+│   ├── generate_data.py
+│   ├── load_database.py
 │   ├── run_pipeline.py
 │   ├── validate_data.py
 │   ├── sales_analysis.py
+│   ├── reconciliation.py
 │   └── performance_benchmark.py
 │
 ├── tests/
+│   ├── test_checkpoint_manager.py
+│   ├── test_data_generator.py
 │   ├── test_data_quality.py
 │   ├── test_idempotency.py
 │   └── test_pipeline_operations.py
 │
 ├── requirements.txt
-├── README.md
-└── yottaflex.db
+└── README.md
 ```
 
 ## 4. Pipeline Workflow
@@ -124,7 +134,16 @@ The project includes automated tests for data quality, database idempotency, and
 pytest -v
 ```
 
-**Result:** 18 tests passed.
+**Result:** 35 tests passed, 0 failed.
+
+The test suite covers:
+- Checkpoint fingerprint generation and recovery.
+- Synthetic data generation and reproducibility.
+- Data quality and validation.
+- Database idempotency and transaction rollback.
+- Retry handling and operational metrics.
+- Historical backfill and date validation.
+- Late-arriving orders and corrected records.
 
 Additional test scenarios include:
 
@@ -163,7 +182,11 @@ If an invalid operation occurs, the transaction can be rolled back. Retry logic 
 
 Pipeline execution details are recorded using a run ID and operational metrics.
 
-**Current limitation:** The project does not implement a complete automated checkpoint-based recovery and historical backfill mechanism.
+The project implements SHA-256 input fingerprinting and stage-level checkpoints for validation, database loading, sales analysis, and reconciliation.
+
+Completed stages are skipped when the same input is processed again. The database supports historical order backfills, late-arriving orders, and updates to corrected records.
+
+A failed pipeline can resume from the last successfully completed stage.
 
 ## 14. Output Files
 
@@ -193,14 +216,15 @@ The benchmark demonstrates faster repeated reads using a precomputed summary. Th
 
 ## 16. Limitations and Future Improvements
 
+The current implementation is designed as a local Python and SQLite solution.
+
 Potential future improvements include:
 
-- Automated checkpoint-based recovery.
-- Historical data backfilling.
-- Improved handling of late-arriving records.
-- Row-level reconciliation.
 - Cloud-based storage and orchestration.
-- Pipeline monitoring and alerting.
+- Integration with Apache Airflow or similar workflow tools.
+- Advanced pipeline monitoring and alerting.
+- Improved scalability for larger production workloads.
+- More detailed row-level reconciliation and audit dashboards.
 
 ## 17. Author
 
