@@ -147,8 +147,8 @@ def test_transient_database_error_is_retried(monkeypatch):
 
     assert attempts["count"] == 2
 
-
 def test_pipeline_writes_run_id_and_operational_metrics(tmp_path, monkeypatch):
+    write_valid_inputs(tmp_path)
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(run_pipeline, "validate_data", lambda: True)
     monkeypatch.setattr(run_pipeline, "_load_with_retry", lambda: None)
@@ -178,3 +178,134 @@ def test_validator_quarantines_duplicate_primary_keys(tmp_path, monkeypatch):
     rejected = pd.read_csv(data / "quarantine" / "rejected_customers.csv")
     assert len(rejected) == 2
     assert rejected["reject_reason"].str.contains("Duplicate ID").all()
+
+def test_pipeline_resumes_from_failed_stage(tmp_path, monkeypatch):
+    write_valid_inputs(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    calls = {
+        "validation": 0,
+        "loading": 0,
+        "sales": 0,
+        "reconciliation": 0,
+    }
+
+    def fake_validation():
+        calls["validation"] += 1
+        return True
+
+    def fake_loading():
+        calls["loading"] += 1
+
+    def flaky_sales_analysis():
+        calls["sales"] += 1
+        if calls["sales"] == 1:
+            raise RuntimeError("Simulated sales analysis failure")
+
+    def fake_reconciliation():
+        calls["reconciliation"] += 1
+        return True
+
+    monkeypatch.setattr(run_pipeline, "validate_data", fake_validation)
+    monkeypatch.setattr(run_pipeline, "_load_with_retry", fake_loading)
+    monkeypatch.setattr(run_pipeline, "sales_analysis", flaky_sales_analysis)
+    monkeypatch.setattr(run_pipeline, "reconcile_data", fake_reconciliation)
+
+    # First run fails during sales analysis.
+    assert run_pipeline.run_pipeline() is False
+
+    # Second run should resume from sales analysis.
+    assert run_pipeline.run_pipeline() is True
+
+    assert calls["validation"] == 1
+    assert calls["loading"] == 1
+    assert calls["sales"] == 2
+    assert calls["reconciliation"] == 1
+
+def test_historical_backfill_loads_only_selected_dates(tmp_path, monkeypatch):
+    write_valid_inputs(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    load_data(
+        start_date="2026-01-01",
+        end_date="2026-01-31",
+    )
+
+    connection = sqlite3.connect("yottaflex.db")
+    try:
+        orders = connection.execute(
+            "SELECT order_id, order_date FROM orders ORDER BY order_id"
+        ).fetchall()
+
+        assert orders == [(2, "2026-01-01")]
+    finally:
+        connection.close()
+
+
+def test_historical_backfill_rejects_invalid_date_range(tmp_path, monkeypatch):
+    write_valid_inputs(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    with pytest.raises(ValueError):
+        load_data(
+            start_date="2026-02-01",
+            end_date="2026-01-01",
+        )
+
+def test_late_arriving_order_is_inserted(tmp_path, monkeypatch):
+    data = write_valid_inputs(tmp_path)
+
+    # First load only the newer order.
+    orders = pd.read_csv(data / "orders.csv")
+    orders = orders[orders["order_id"] == 1]
+    orders.to_csv(data / "orders.csv", index=False)
+
+    monkeypatch.chdir(tmp_path)
+    load_data()
+
+    # Now add an older order that arrives late.
+    late_order = pd.DataFrame({
+        "order_id": [2],
+        "customer_id": [1],
+        "product_id": [1],
+        "quantity": [1],
+        "order_date": ["2026-01-01"],
+    })
+    late_order.to_csv(data / "orders.csv", mode="a", header=False, index=False)
+
+    load_data()
+
+    connection = sqlite3.connect("yottaflex.db")
+    try:
+        orders = connection.execute(
+            "SELECT order_id, order_date FROM orders ORDER BY order_id"
+        ).fetchall()
+        assert orders == [
+            (1, "2026-02-01"),
+            (2, "2026-01-01"),
+        ]
+    finally:
+        connection.close()
+
+
+def test_existing_order_is_updated_when_corrected(tmp_path, monkeypatch):
+    data = write_valid_inputs(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    load_data()
+
+    # Correct the quantity for an existing order.
+    orders = pd.read_csv(data / "orders.csv")
+    orders.loc[orders["order_id"] == 1, "quantity"] = 5
+    orders.to_csv(data / "orders.csv", index=False)
+
+    load_data()
+
+    connection = sqlite3.connect("yottaflex.db")
+    try:
+        quantity = connection.execute(
+            "SELECT quantity FROM orders WHERE order_id = 1"
+        ).fetchone()[0]
+        assert quantity == 5
+    finally:
+        connection.close()

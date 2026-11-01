@@ -4,3 +4,200 @@
 2026-10-31 20:15:03,166 - INFO - Database loading completed.
 2026-10-31 20:15:03,278 - INFO - Sales analysis completed.
 2026-10-31 20:15:03,279 - INFO - Pipeline completed successfully in 0.4619 seconds.
+2026-11-01 10:59:24,986 - INFO - Pipeline started.
+2026-11-01 10:59:24,987 - INFO - Data validation started.
+2026-11-01 10:59:25,040 - INFO - Data validation passed.
+2026-11-01 10:59:25,227 - INFO - Database loading completed.
+2026-11-01 10:59:25,301 - INFO - Sales analysis completed.
+2026-11-01 10:59:25,302 - INFO - Pipeline completed successfully in 0.3154 seconds.
+2026-11-01 11:08:13,224 - INFO - Pipeline started.
+2026-11-01 11:08:13,302 - INFO - Data validation passed.
+2026-11-01 11:08:13,549 - INFO - Database loading completed.
+2026-11-01 11:08:13,651 - INFO - Sales analysis completed.
+2026-11-01 11:08:13,723 - INFO - Data reconciliation passed.
+2026-11-01 11:08:13,723 - INFO - Pipeline completed successfully in 0.4989 seconds.
+2026-11-01 12:20:46,657 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 12:20:46,664 - INFO - Pipeline run c6e9f446-7013-41af-bafb-90da915b0aee started.
+2026-11-01 12:20:46,665 - INFO - Run c6e9f446-7013-41af-bafb-90da915b0aee: data validation passed.
+2026-11-01 12:20:46,665 - INFO - Run c6e9f446-7013-41af-bafb-90da915b0aee: database loading completed.
+2026-11-01 12:20:46,665 - INFO - Run c6e9f446-7013-41af-bafb-90da915b0aee: sales analysis completed.
+2026-11-01 12:20:46,665 - INFO - Run c6e9f446-7013-41af-bafb-90da915b0aee: data reconciliation passed.
+2026-11-01 12:20:46,666 - INFO - Run c6e9f446-7013-41af-bafb-90da915b0aee finished with status SUCCESS in 0.0006 seconds.
+2026-11-01 12:21:24,974 - INFO - Pipeline run a133a8ad-5373-4df3-93c8-6a95d12a0115 started.
+2026-11-01 12:21:25,031 - INFO - Run a133a8ad-5373-4df3-93c8-6a95d12a0115: data validation passed.
+2026-11-01 12:21:25,199 - INFO - Run a133a8ad-5373-4df3-93c8-6a95d12a0115: database loading completed.
+2026-11-01 12:21:25,283 - INFO - Run a133a8ad-5373-4df3-93c8-6a95d12a0115: sales analysis completed.
+2026-11-01 12:21:25,345 - INFO - Run a133a8ad-5373-4df3-93c8-6a95d12a0115: data reconciliation passed.
+2026-11-01 12:21:25,375 - INFO - Run a133a8ad-5373-4df3-93c8-6a95d12a0115 finished with status SUCCESS in 0.3709 seconds.
+2026-11-01 13:55:26,586 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 13:55:26,590 - INFO - Pipeline run 87c2e943-75d0-4c96-bfe0-bfdfc01c3385 started.
+2026-11-01 13:55:26,590 - INFO - Run 87c2e943-75d0-4c96-bfe0-bfdfc01c3385: data validation passed.
+2026-11-01 13:55:26,591 - INFO - Run 87c2e943-75d0-4c96-bfe0-bfdfc01c3385: database loading completed.
+2026-11-01 13:55:26,591 - INFO - Run 87c2e943-75d0-4c96-bfe0-bfdfc01c3385: sales analysis completed.
+2026-11-01 13:55:26,591 - INFO - Run 87c2e943-75d0-4c96-bfe0-bfdfc01c3385: data reconciliation passed.
+2026-11-01 13:55:26,595 - INFO - Run 87c2e943-75d0-4c96-bfe0-bfdfc01c3385 finished with status SUCCESS in 0.0007 seconds.
+2026-11-01 15:45:54,551 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 15:45:54,556 - INFO - Pipeline run 102edff6-da54-44a4-b3e7-82a57b3a3668 started.
+2026-11-01 15:45:54,556 - ERROR - Run 102edff6-da54-44a4-b3e7-82a57b3a3668 failed.
+Traceback (most recent call last):
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\run_pipeline.py", line 134, in run_pipeline
+    input_fingerprint = get_input_fingerprint("data")
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\checkpoint_manager.py", line 30, in get_input_fingerprint
+    raise FileNotFoundError(
+        f"Required source file is missing: {file_path}"
+    )
+FileNotFoundError: Required source file is missing: data\customers.csv
+2026-11-01 15:45:54,561 - INFO - Run 102edff6-da54-44a4-b3e7-82a57b3a3668 finished with status FAILED in 0.0043 seconds.
+2026-11-01 15:51:10,104 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 15:51:10,120 - INFO - Pipeline run 128fe217-4de8-40f1-938c-c7b8edefaedc started.
+2026-11-01 15:51:10,143 - INFO - Run 128fe217-4de8-40f1-938c-c7b8edefaedc: validation completed.
+2026-11-01 15:51:10,149 - INFO - Run 128fe217-4de8-40f1-938c-c7b8edefaedc: database loading completed.
+2026-11-01 15:51:10,157 - INFO - Run 128fe217-4de8-40f1-938c-c7b8edefaedc: sales analysis completed.
+2026-11-01 15:51:10,164 - INFO - Run 128fe217-4de8-40f1-938c-c7b8edefaedc: reconciliation completed.
+2026-11-01 15:51:10,172 - INFO - Run 128fe217-4de8-40f1-938c-c7b8edefaedc finished with status SUCCESS in 0.0447 seconds.
+2026-11-01 15:52:25,041 - INFO - Pipeline run 71586fb5-15c0-40aa-b1d0-fec83948b35a started.
+2026-11-01 15:52:25,152 - INFO - Run 71586fb5-15c0-40aa-b1d0-fec83948b35a: validation completed.
+2026-11-01 15:52:25,329 - INFO - Run 71586fb5-15c0-40aa-b1d0-fec83948b35a: database loading completed.
+2026-11-01 15:52:25,412 - INFO - Run 71586fb5-15c0-40aa-b1d0-fec83948b35a: sales analysis completed.
+2026-11-01 15:52:25,485 - INFO - Run 71586fb5-15c0-40aa-b1d0-fec83948b35a: reconciliation completed.
+2026-11-01 15:52:25,527 - INFO - Run 71586fb5-15c0-40aa-b1d0-fec83948b35a finished with status SUCCESS in 0.4453 seconds.
+2026-11-01 15:52:53,400 - INFO - Pipeline run 8af2412f-270b-4874-a749-11b3b9dc8e73 started.
+2026-11-01 15:52:53,495 - INFO - Run 8af2412f-270b-4874-a749-11b3b9dc8e73 finished with status SUCCESS in 0.0227 seconds.
+2026-11-01 15:55:52,730 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 15:55:52,748 - INFO - Pipeline run 42f8535a-d0d2-4d09-acca-13a882468d02 started.
+2026-11-01 15:55:52,774 - INFO - Run 42f8535a-d0d2-4d09-acca-13a882468d02: validation completed.
+2026-11-01 15:55:52,782 - INFO - Run 42f8535a-d0d2-4d09-acca-13a882468d02: database loading completed.
+2026-11-01 15:55:52,791 - INFO - Run 42f8535a-d0d2-4d09-acca-13a882468d02: sales analysis completed.
+2026-11-01 15:55:52,797 - INFO - Run 42f8535a-d0d2-4d09-acca-13a882468d02: reconciliation completed.
+2026-11-01 15:55:52,806 - INFO - Run 42f8535a-d0d2-4d09-acca-13a882468d02 finished with status SUCCESS in 0.0498 seconds.
+2026-11-01 15:55:52,883 - INFO - Pipeline run cb3ac06a-6346-4799-a47f-7d02d84138e5 started.
+2026-11-01 15:55:52,905 - INFO - Run cb3ac06a-6346-4799-a47f-7d02d84138e5: validation completed.
+2026-11-01 15:55:52,912 - INFO - Run cb3ac06a-6346-4799-a47f-7d02d84138e5: database loading completed.
+2026-11-01 15:55:52,912 - ERROR - Run cb3ac06a-6346-4799-a47f-7d02d84138e5 failed.
+Traceback (most recent call last):
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\run_pipeline.py", line 176, in run_pipeline
+    sales_analysis()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\tests\test_pipeline_operations.py", line 203, in flaky_sales_analysis
+    raise RuntimeError("Simulated sales analysis failure")
+RuntimeError: Simulated sales analysis failure
+2026-11-01 15:55:52,922 - INFO - Run cb3ac06a-6346-4799-a47f-7d02d84138e5 finished with status FAILED in 0.0322 seconds.
+2026-11-01 15:55:52,922 - INFO - Pipeline run fbda6349-e746-493f-a5a8-5920fe5748e4 started.
+2026-11-01 15:55:52,932 - INFO - Run fbda6349-e746-493f-a5a8-5920fe5748e4: sales analysis completed.
+2026-11-01 15:55:52,939 - INFO - Run fbda6349-e746-493f-a5a8-5920fe5748e4: reconciliation completed.
+2026-11-01 15:55:52,946 - INFO - Run fbda6349-e746-493f-a5a8-5920fe5748e4 finished with status SUCCESS in 0.0166 seconds.
+2026-11-01 16:00:04,724 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 16:00:04,739 - INFO - Pipeline run 11a574d7-aae1-41fd-92aa-882126fefae1 started.
+2026-11-01 16:00:04,759 - INFO - Run 11a574d7-aae1-41fd-92aa-882126fefae1: validation completed.
+2026-11-01 16:00:04,766 - INFO - Run 11a574d7-aae1-41fd-92aa-882126fefae1: database loading completed.
+2026-11-01 16:00:04,772 - INFO - Run 11a574d7-aae1-41fd-92aa-882126fefae1: sales analysis completed.
+2026-11-01 16:00:04,780 - INFO - Run 11a574d7-aae1-41fd-92aa-882126fefae1: reconciliation completed.
+2026-11-01 16:00:04,787 - INFO - Run 11a574d7-aae1-41fd-92aa-882126fefae1 finished with status SUCCESS in 0.0417 seconds.
+2026-11-01 16:00:04,851 - INFO - Pipeline run bb4b6953-d5b6-4a84-bced-269838f94019 started.
+2026-11-01 16:00:04,882 - INFO - Run bb4b6953-d5b6-4a84-bced-269838f94019: validation completed.
+2026-11-01 16:00:04,890 - INFO - Run bb4b6953-d5b6-4a84-bced-269838f94019: database loading completed.
+2026-11-01 16:00:04,890 - ERROR - Run bb4b6953-d5b6-4a84-bced-269838f94019 failed.
+Traceback (most recent call last):
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\run_pipeline.py", line 176, in run_pipeline
+    sales_analysis()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\tests\test_pipeline_operations.py", line 203, in flaky_sales_analysis
+    raise RuntimeError("Simulated sales analysis failure")
+RuntimeError: Simulated sales analysis failure
+2026-11-01 16:00:04,902 - INFO - Run bb4b6953-d5b6-4a84-bced-269838f94019 finished with status FAILED in 0.0422 seconds.
+2026-11-01 16:00:04,903 - INFO - Pipeline run dd588cd1-08e5-40ae-8feb-48e5fb901d3c started.
+2026-11-01 16:00:04,914 - INFO - Run dd588cd1-08e5-40ae-8feb-48e5fb901d3c: sales analysis completed.
+2026-11-01 16:00:04,922 - INFO - Run dd588cd1-08e5-40ae-8feb-48e5fb901d3c: reconciliation completed.
+2026-11-01 16:00:04,929 - INFO - Run dd588cd1-08e5-40ae-8feb-48e5fb901d3c finished with status SUCCESS in 0.0193 seconds.
+2026-11-01 16:06:01,908 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 16:06:01,926 - INFO - Pipeline run e96a1219-5b8d-49b0-86b3-2eab8255f15f started.
+2026-11-01 16:06:02,031 - INFO - Run e96a1219-5b8d-49b0-86b3-2eab8255f15f: validation completed.
+2026-11-01 16:06:02,040 - INFO - Run e96a1219-5b8d-49b0-86b3-2eab8255f15f: database loading completed.
+2026-11-01 16:06:02,048 - INFO - Run e96a1219-5b8d-49b0-86b3-2eab8255f15f: sales analysis completed.
+2026-11-01 16:06:02,055 - INFO - Run e96a1219-5b8d-49b0-86b3-2eab8255f15f: reconciliation completed.
+2026-11-01 16:06:02,065 - INFO - Run e96a1219-5b8d-49b0-86b3-2eab8255f15f finished with status SUCCESS in 0.1301 seconds.
+2026-11-01 16:06:02,143 - INFO - Pipeline run 9759b74d-7e2e-4300-9dbf-c2943b4842cf started.
+2026-11-01 16:06:02,171 - INFO - Run 9759b74d-7e2e-4300-9dbf-c2943b4842cf: validation completed.
+2026-11-01 16:06:02,177 - INFO - Run 9759b74d-7e2e-4300-9dbf-c2943b4842cf: database loading completed.
+2026-11-01 16:06:02,177 - ERROR - Run 9759b74d-7e2e-4300-9dbf-c2943b4842cf failed.
+Traceback (most recent call last):
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\run_pipeline.py", line 176, in run_pipeline
+    sales_analysis()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\tests\test_pipeline_operations.py", line 203, in flaky_sales_analysis
+    raise RuntimeError("Simulated sales analysis failure")
+RuntimeError: Simulated sales analysis failure
+2026-11-01 16:06:02,187 - INFO - Run 9759b74d-7e2e-4300-9dbf-c2943b4842cf finished with status FAILED in 0.0367 seconds.
+2026-11-01 16:06:02,187 - INFO - Pipeline run b2fe893a-c4b7-4f3c-96d4-b83a4bd6479b started.
+2026-11-01 16:06:02,197 - INFO - Run b2fe893a-c4b7-4f3c-96d4-b83a4bd6479b: sales analysis completed.
+2026-11-01 16:06:02,204 - INFO - Run b2fe893a-c4b7-4f3c-96d4-b83a4bd6479b: reconciliation completed.
+2026-11-01 16:06:02,212 - INFO - Run b2fe893a-c4b7-4f3c-96d4-b83a4bd6479b finished with status SUCCESS in 0.0171 seconds.
+2026-11-01 16:58:41,325 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 16:58:41,341 - INFO - Pipeline run 09dd1520-7e5b-4545-9a9f-72b2440f0548 started.
+2026-11-01 16:58:41,363 - INFO - Run 09dd1520-7e5b-4545-9a9f-72b2440f0548: validation completed.
+2026-11-01 16:58:41,370 - INFO - Run 09dd1520-7e5b-4545-9a9f-72b2440f0548: database loading completed.
+2026-11-01 16:58:41,376 - INFO - Run 09dd1520-7e5b-4545-9a9f-72b2440f0548: sales analysis completed.
+2026-11-01 16:58:41,386 - INFO - Run 09dd1520-7e5b-4545-9a9f-72b2440f0548: reconciliation completed.
+2026-11-01 16:58:41,393 - INFO - Run 09dd1520-7e5b-4545-9a9f-72b2440f0548 finished with status SUCCESS in 0.0451 seconds.
+2026-11-01 16:58:41,462 - INFO - Pipeline run 219278d2-b73b-46ef-ad25-6142edd45c89 started.
+2026-11-01 16:58:41,485 - INFO - Run 219278d2-b73b-46ef-ad25-6142edd45c89: validation completed.
+2026-11-01 16:58:41,491 - INFO - Run 219278d2-b73b-46ef-ad25-6142edd45c89: database loading completed.
+2026-11-01 16:58:41,491 - ERROR - Run 219278d2-b73b-46ef-ad25-6142edd45c89 failed.
+Traceback (most recent call last):
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\run_pipeline.py", line 176, in run_pipeline
+    sales_analysis()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\tests\test_pipeline_operations.py", line 203, in flaky_sales_analysis
+    raise RuntimeError("Simulated sales analysis failure")
+RuntimeError: Simulated sales analysis failure
+2026-11-01 16:58:41,499 - INFO - Run 219278d2-b73b-46ef-ad25-6142edd45c89 finished with status FAILED in 0.0307 seconds.
+2026-11-01 16:58:41,499 - INFO - Pipeline run 8c84e354-1239-491a-b291-9eff9e588b1f started.
+2026-11-01 16:58:41,508 - INFO - Run 8c84e354-1239-491a-b291-9eff9e588b1f: sales analysis completed.
+2026-11-01 16:58:41,514 - INFO - Run 8c84e354-1239-491a-b291-9eff9e588b1f: reconciliation completed.
+2026-11-01 16:58:41,521 - INFO - Run 8c84e354-1239-491a-b291-9eff9e588b1f finished with status SUCCESS in 0.0151 seconds.
+2026-11-01 17:16:22,808 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 17:16:22,823 - INFO - Pipeline run 7309cb92-da7c-4f46-837b-7c88d330f3f7 started.
+2026-11-01 17:16:22,846 - INFO - Run 7309cb92-da7c-4f46-837b-7c88d330f3f7: validation completed.
+2026-11-01 17:16:22,852 - INFO - Run 7309cb92-da7c-4f46-837b-7c88d330f3f7: database loading completed.
+2026-11-01 17:16:22,859 - INFO - Run 7309cb92-da7c-4f46-837b-7c88d330f3f7: sales analysis completed.
+2026-11-01 17:16:22,866 - INFO - Run 7309cb92-da7c-4f46-837b-7c88d330f3f7: reconciliation completed.
+2026-11-01 17:16:22,873 - INFO - Run 7309cb92-da7c-4f46-837b-7c88d330f3f7 finished with status SUCCESS in 0.0429 seconds.
+2026-11-01 17:16:22,940 - INFO - Pipeline run c11573e7-1659-4801-b9d4-ec3e0c92bce3 started.
+2026-11-01 17:16:22,961 - INFO - Run c11573e7-1659-4801-b9d4-ec3e0c92bce3: validation completed.
+2026-11-01 17:16:22,968 - INFO - Run c11573e7-1659-4801-b9d4-ec3e0c92bce3: database loading completed.
+2026-11-01 17:16:22,968 - ERROR - Run c11573e7-1659-4801-b9d4-ec3e0c92bce3 failed.
+Traceback (most recent call last):
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\run_pipeline.py", line 176, in run_pipeline
+    sales_analysis()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\tests\test_pipeline_operations.py", line 203, in flaky_sales_analysis
+    raise RuntimeError("Simulated sales analysis failure")
+RuntimeError: Simulated sales analysis failure
+2026-11-01 17:16:22,975 - INFO - Run c11573e7-1659-4801-b9d4-ec3e0c92bce3 finished with status FAILED in 0.0301 seconds.
+2026-11-01 17:16:22,976 - INFO - Pipeline run 211aa459-8c7f-430e-b2ca-b5e4a66a1e9d started.
+2026-11-01 17:16:22,984 - INFO - Run 211aa459-8c7f-430e-b2ca-b5e4a66a1e9d: sales analysis completed.
+2026-11-01 17:16:22,990 - INFO - Run 211aa459-8c7f-430e-b2ca-b5e4a66a1e9d: reconciliation completed.
+2026-11-01 17:16:22,997 - INFO - Run 211aa459-8c7f-430e-b2ca-b5e4a66a1e9d finished with status SUCCESS in 0.0149 seconds.
+2026-11-01 17:21:34,378 - WARNING - Database load attempt 1/2 failed; retrying.
+2026-11-01 17:21:34,391 - INFO - Pipeline run 851bd868-7685-4b2d-becf-6720e747b96e started.
+2026-11-01 17:21:34,411 - INFO - Run 851bd868-7685-4b2d-becf-6720e747b96e: validation completed.
+2026-11-01 17:21:34,420 - INFO - Run 851bd868-7685-4b2d-becf-6720e747b96e: database loading completed.
+2026-11-01 17:21:34,426 - INFO - Run 851bd868-7685-4b2d-becf-6720e747b96e: sales analysis completed.
+2026-11-01 17:21:34,433 - INFO - Run 851bd868-7685-4b2d-becf-6720e747b96e: reconciliation completed.
+2026-11-01 17:21:34,440 - INFO - Run 851bd868-7685-4b2d-becf-6720e747b96e finished with status SUCCESS in 0.0421 seconds.
+2026-11-01 17:21:34,514 - INFO - Pipeline run 7b9b93b6-61be-40bf-9149-b8a2a6a45566 started.
+2026-11-01 17:21:34,533 - INFO - Run 7b9b93b6-61be-40bf-9149-b8a2a6a45566: validation completed.
+2026-11-01 17:21:34,540 - INFO - Run 7b9b93b6-61be-40bf-9149-b8a2a6a45566: database loading completed.
+2026-11-01 17:21:34,540 - ERROR - Run 7b9b93b6-61be-40bf-9149-b8a2a6a45566 failed.
+Traceback (most recent call last):
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\src\run_pipeline.py", line 176, in run_pipeline
+    sales_analysis()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\reshm\OneDrive\Desktop\yottaflex-data-engineering\tests\test_pipeline_operations.py", line 203, in flaky_sales_analysis
+    raise RuntimeError("Simulated sales analysis failure")
+RuntimeError: Simulated sales analysis failure
+2026-11-01 17:21:34,549 - INFO - Run 7b9b93b6-61be-40bf-9149-b8a2a6a45566 finished with status FAILED in 0.0287 seconds.
+2026-11-01 17:21:34,550 - INFO - Pipeline run c8ebcb51-86c1-4bfc-8798-cd8de537194e started.
+2026-11-01 17:21:34,559 - INFO - Run c8ebcb51-86c1-4bfc-8798-cd8de537194e: sales analysis completed.
+2026-11-01 17:21:34,565 - INFO - Run c8ebcb51-86c1-4bfc-8798-cd8de537194e: reconciliation completed.
+2026-11-01 17:21:34,571 - INFO - Run c8ebcb51-86c1-4bfc-8798-cd8de537194e finished with status SUCCESS in 0.0158 seconds.

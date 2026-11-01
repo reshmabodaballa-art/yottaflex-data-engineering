@@ -10,7 +10,11 @@ from validate_data import validate_data
 from load_database import load_data
 from sales_analysis import sales_analysis
 from reconciliation import reconcile_data
-
+from checkpoint_manager import (
+    get_input_fingerprint,
+    get_completed_stages,
+    mark_stage_completed,
+)
 
 REPORT_DIR = Path("reports")
 RUN_HISTORY = REPORT_DIR / "pipeline_runs.csv"
@@ -112,7 +116,6 @@ def _load_with_retry(max_attempts=3, retry_delay=0.25):
             )
             time.sleep(retry_delay * attempt)
 
-
 def run_pipeline():
     run_id = str(uuid.uuid4())
     start_time = _utc_now()
@@ -124,35 +127,80 @@ def run_pipeline():
     print("YOTTAFLEX AI - DATA PIPELINE")
     print(f"Run ID: {run_id}")
     print("=" * 50)
+
     logging.info("Pipeline run %s started.", run_id)
 
     try:
-        print("\nSTEP 1: DATA VALIDATION")
-        if not validate_data():
-            failure_reason = "Data validation failed; inspect quarantine and pipeline log."
-            print("\nPipeline stopped: Data validation failed.")
-            logging.error("Run %s: %s", run_id, failure_reason)
-            return False
+        input_fingerprint = get_input_fingerprint("data")
+        completed_stages = get_completed_stages(input_fingerprint)
 
-        logging.info("Run %s: data validation passed.", run_id)
+        print("\nInput fingerprint:", input_fingerprint)
 
-        print("\nSTEP 2: DATABASE LOADING")
-        _load_with_retry()
-        logging.info("Run %s: database loading completed.", run_id)
+        # STEP 1: DATA VALIDATION
+        if "validation" in completed_stages:
+            print("\nSTEP 1: DATA VALIDATION - SKIPPED (checkpoint found)")
+        else:
+            print("\nSTEP 1: DATA VALIDATION")
 
-        print("\nSTEP 3: SALES ANALYSIS")
-        sales_analysis()
-        logging.info("Run %s: sales analysis completed.", run_id)
+            if not validate_data():
+                failure_reason = (
+                    "Data validation failed; inspect quarantine and pipeline log."
+                )
+                print("\nPipeline stopped: Data validation failed.")
+                logging.error("Run %s: %s", run_id, failure_reason)
+                return False
 
-        print("\nSTEP 4: DATA RECONCILIATION")
-        if not reconcile_data():
-            failure_reason = "Data reconciliation failed; inspect reconciliation_report.csv."
-            print("\nPipeline stopped: Reconciliation failed.")
-            logging.error("Run %s: %s", run_id, failure_reason)
-            return False
+            mark_stage_completed(
+                input_fingerprint, "validation", run_id
+            )
+            logging.info("Run %s: validation completed.", run_id)
 
-        logging.info("Run %s: data reconciliation passed.", run_id)
+        # STEP 2: DATABASE LOADING
+        if "database_loading" in completed_stages:
+            print("\nSTEP 2: DATABASE LOADING - SKIPPED (checkpoint found)")
+        else:
+            print("\nSTEP 2: DATABASE LOADING")
+            _load_with_retry()
+
+
+            mark_stage_completed(
+                input_fingerprint, "database_loading", run_id
+            )
+            logging.info("Run %s: database loading completed.", run_id)
+
+        # STEP 3: SALES ANALYSIS
+        if "sales_analysis" in completed_stages:
+            print("\nSTEP 3: SALES ANALYSIS - SKIPPED (checkpoint found)")
+        else:
+            print("\nSTEP 3: SALES ANALYSIS")
+            sales_analysis()
+
+            mark_stage_completed(
+                input_fingerprint, "sales_analysis", run_id
+            )
+            logging.info("Run %s: sales analysis completed.", run_id)
+
+        # STEP 4: DATA RECONCILIATION
+        if "reconciliation" in completed_stages:
+            print("\nSTEP 4: DATA RECONCILIATION - SKIPPED (checkpoint found)")
+        else:
+            print("\nSTEP 4: DATA RECONCILIATION")
+
+            if not reconcile_data():
+                failure_reason = (
+                    "Data reconciliation failed; inspect reconciliation_report.csv."
+                )
+                print("\nPipeline stopped: Reconciliation failed.")
+                logging.error("Run %s: %s", run_id, failure_reason)
+                return False
+
+            mark_stage_completed(
+                input_fingerprint, "reconciliation", run_id
+            )
+            logging.info("Run %s: reconciliation completed.", run_id)
+
         status = "SUCCESS"
+
         print("\n" + "=" * 50)
         print("DATA PIPELINE COMPLETED SUCCESSFULLY!")
         print("=" * 50)
@@ -166,6 +214,7 @@ def run_pipeline():
 
     finally:
         ended = time.perf_counter()
+
         record = {
             "run_id": run_id,
             "start_time": start_time,
@@ -177,15 +226,17 @@ def run_pipeline():
             "duration_seconds": round(ended - started, 4),
             "failure_reason": failure_reason,
         }
+
         _append_run_record(record)
+
         logging.info(
             "Run %s finished with status %s in %.4f seconds.",
             run_id, status, ended - started
         )
+
         print(f"Run status: {status}")
         print(f"Run ID: {run_id}")
         print(f"Operational metrics: {RUN_HISTORY}")
-
 
 if __name__ == "__main__":
     run_pipeline()
