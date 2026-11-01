@@ -1,18 +1,15 @@
-
 import logging
 import time
-from datetime import datetime
 from pathlib import Path
 
 from validate_data import validate_data
 from load_database import load_data
 from sales_analysis import sales_analysis
+from reconciliation import reconcile_data
 
 
-# Create reports folder
 Path("reports").mkdir(exist_ok=True)
 
-# Configure logging
 logging.basicConfig(
     filename="reports/pipeline.log",
     level=logging.INFO,
@@ -23,7 +20,6 @@ logging.basicConfig(
 
 def run_pipeline():
     start_time = time.perf_counter()
-    start_datetime = datetime.now()
 
     print("=" * 50)
     print("YOTTAFLEX AI - DATA PIPELINE")
@@ -33,13 +29,11 @@ def run_pipeline():
 
     try:
         print("\nSTEP 1: DATA VALIDATION")
-        logging.info("Data validation started.")
-
         validation_passed = validate_data()
 
         if not validation_passed:
             print("\nPipeline stopped: Data validation failed.")
-            logging.error("Pipeline stopped: Validation failed.")
+            logging.error("Validation failed.")
             return False
 
         logging.info("Data validation passed.")
@@ -51,6 +45,16 @@ def run_pipeline():
         print("\nSTEP 3: SALES ANALYSIS")
         sales_analysis()
         logging.info("Sales analysis completed.")
+
+        print("\nSTEP 4: DATA RECONCILIATION")
+        reconciliation_passed = reconcile_data()
+
+        if not reconciliation_passed:
+            print("\nPipeline stopped: Reconciliation failed.")
+            logging.error("Reconciliation failed.")
+            return False
+
+        logging.info("Data reconciliation passed.")
 
         elapsed_time = time.perf_counter() - start_time
 
@@ -68,7 +72,7 @@ def run_pipeline():
         return True
 
     except Exception:
-        logging.exception("Pipeline failed due to an unexpected error.")
+        logging.exception("Pipeline failed.")
         print("\nPipeline failed. Check reports/pipeline.log for details.")
         return False
 

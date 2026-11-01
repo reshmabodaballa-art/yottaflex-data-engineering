@@ -1,0 +1,5 @@
+check,source_value,database_value,status
+customers_count,10.0,10.0,PASS
+products_count,100.0,100.0,PASS
+orders_count,100000.0,100000.0,PASS
+total_sales,779133939.72,779133939.72,PASS
