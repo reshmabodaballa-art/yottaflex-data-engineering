@@ -4,4 +4,4 @@ __pycache__/
 *.pyc
 yottaflex_backup.db
 *_backup.csv
-*_backup.py
+*_backup.pyyottaflex.db
