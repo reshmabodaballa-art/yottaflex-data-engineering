@@ -21,18 +21,26 @@ The project focuses on data quality, reliable processing, database idempotency, 
 yottaflex-data-engineering/
 │
 ├── data/
-│
-├── docs/
-│   ├── architecture.md
-│   └── data_dictionary.md
+│   ├── customers.csv
+│   ├── orders.csv
+│   ├── products.csv
+│   └── test_data/
+│       └── bad_products.csv
 │
 ├── reports/
 │   ├── automated_test_report.txt
+│   ├── bad_data_test_report.txt
+│   ├── customer_generator_test_report.txt
+│   ├── data_generator_test_report.txt
+│   ├── idempotency_report.txt
 │   ├── performance_report.txt
+│   ├── pipeline.log
 │   ├── pipeline_execution_report.txt
 │   ├── pipeline_runs.csv
+│   ├── product_generator_test_report.txt
 │   ├── reconciliation_report.csv
-│   └── sales_analysis.csv
+│   ├── sales_analysis.csv
+│   └── validation_report.txt
 │
 ├── src/
 │   ├── __init__.py
@@ -54,6 +62,7 @@ yottaflex-data-engineering/
 │   ├── test_idempotency.py
 │   └── test_pipeline_operations.py
 │
+├── .gitignore
 ├── requirements.txt
 ├── PROMPT_HISTORY.txt
 └── README.md
@@ -240,8 +249,10 @@ The pipeline generates the following reports:
 - `reconciliation_report.csv` – Data reconciliation results.
 - `pipeline_runs.csv` – Pipeline execution history.
 - `pipeline_execution_report.txt` – Pipeline execution summary.
+- `pipeline.log` – Pipeline execution log.
 - `automated_test_report.txt` – Automated testing results.
 - `performance_report.txt` – Performance benchmark results.
+- Additional validation and data-generator test reports.
 
 ## 16. Performance Benchmark
 
