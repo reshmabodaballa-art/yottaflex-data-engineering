@@ -53,7 +53,10 @@ def sales_analysis():
 
     output_folder = Path("reports")
     output_folder.mkdir(exist_ok=True)
-    sales_report.to_csv(output_folder / "sales_analysis.csv", index=False)
+    sales_report.to_csv(
+    output_folder / "sales_analysis.pending.csv",
+    index=False
+)
     print("\nSales report saved successfully!")
 
 

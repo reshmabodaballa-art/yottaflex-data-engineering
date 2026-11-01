@@ -7,6 +7,27 @@ from pathlib import Path
 import json
 import uuid
 from datetime import datetime, timezone
+
+
+def read_source_file(data_folder, filename, required_columns):
+    """Read a CSV and arrange its columns in the required order."""
+    file_path = data_folder / filename
+    dataframe = pd.read_csv(file_path)
+
+    missing_columns = [
+        column for column in required_columns
+        if column not in dataframe.columns
+    ]
+
+    if missing_columns:
+        raise ValueError(
+            f"{filename} is missing required columns: {missing_columns}"
+        )
+
+    # Select by column name, not by the CSV's original order.
+    return dataframe.loc[:, required_columns].copy()
+
+
 def save_record_history(
     connection, entity_type, dataframe, primary_key,
     columns, source_file, run_id
@@ -58,14 +79,36 @@ def save_record_history(
                 operation, previous_values, new_values, timestamp
             )
         )
-def load_data(start_date=None, end_date=None):
+
+def load_data(start_date=None, end_date=None, run_id=None):
     start_time = time.perf_counter()
-    run_id = str(uuid.uuid4())
+
+    if run_id is None:
+        run_id = str(uuid.uuid4())
+
     data_folder = Path("data")
 
-    customers = pd.read_csv(data_folder / "customers.csv")
-    products = pd.read_csv(data_folder / "products.csv")
-    orders = pd.read_csv(data_folder / "orders.csv")
+    # Read and normalize every dataset using named columns.
+    customers = read_source_file(
+        data_folder,
+        "customers.csv",
+        ["customer_id", "customer_name", "city"]
+    )
+
+    products = read_source_file(
+        data_folder,
+        "products.csv",
+        ["product_id", "product_name", "category", "price"]
+    )
+
+    orders = read_source_file(
+        data_folder,
+        "orders.csv",
+        [
+            "order_id", "customer_id", "product_id",
+            "quantity", "order_date"
+        ]
+    )
 
     # Validate and apply an optional historical date range.
     if start_date or end_date:
@@ -74,11 +117,15 @@ def load_data(start_date=None, end_date=None):
         ).dt.strftime("%Y-%m-%d")
 
         if start_date:
-            pd.to_datetime(start_date, format="%Y-%m-%d", errors="raise")
+            pd.to_datetime(
+                start_date, format="%Y-%m-%d", errors="raise"
+            )
             orders = orders[orders["order_date"] >= start_date]
 
         if end_date:
-            pd.to_datetime(end_date, format="%Y-%m-%d", errors="raise")
+            pd.to_datetime(
+                end_date, format="%Y-%m-%d", errors="raise"
+            )
             orders = orders[orders["order_date"] <= end_date]
 
         if start_date and end_date and start_date > end_date:
@@ -106,13 +153,11 @@ def load_data(start_date=None, end_date=None):
             )
         }
 
-        needs_rebuild = existing_tables.intersection(required_tables)
+        needs_rebuild = False
 
-        if needs_rebuild:
-            needs_rebuild = (
-                existing_tables.intersection(required_tables)
-                != set(required_tables)
-            )
+        if existing_tables.intersection(required_tables):
+            if existing_tables.intersection(required_tables) != set(required_tables):
+                needs_rebuild = True
 
             for table, primary_key in required_tables.items():
                 if table in existing_tables:
@@ -125,10 +170,9 @@ def load_data(start_date=None, end_date=None):
                         for row in info
                     )
 
-
                     if not has_primary_key:
                         needs_rebuild = True
-            
+
         with connection:
             if needs_rebuild:
                 connection.execute("DROP TABLE IF EXISTS orders")
@@ -160,7 +204,8 @@ def load_data(start_date=None, end_date=None):
                     FOREIGN KEY (product_id)
                         REFERENCES products(product_id)
                 );
-               CREATE TABLE IF NOT EXISTS source_record_history (
+
+                CREATE TABLE IF NOT EXISTS source_record_history (
                     history_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     entity_type TEXT NOT NULL,
                     record_id TEXT NOT NULL,
@@ -179,18 +224,24 @@ def load_data(start_date=None, end_date=None):
                 ["customer_id", "customer_name", "city"],
                 "customers.csv", run_id
             )
+
             save_record_history(
                 connection, "products", products,
                 "product_id",
                 ["product_id", "product_name", "category", "price"],
                 "products.csv", run_id
             )
+
             save_record_history(
                 connection, "orders", orders,
                 "order_id",
-                ["order_id", "customer_id", "product_id", "quantity", "order_date"],
+                [
+                    "order_id", "customer_id", "product_id",
+                    "quantity", "order_date"
+                ],
                 "orders.csv", run_id
             )
+
             connection.executemany(
                 """
                 INSERT INTO customers

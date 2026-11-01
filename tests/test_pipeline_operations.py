@@ -133,39 +133,80 @@ def test_database_load_rolls_back_partial_batch_and_can_retry(tmp_path, monkeypa
     finally:
         connection.close()
 
-
 def test_transient_database_error_is_retried(monkeypatch):
     attempts = {"count": 0}
+    received_run_ids = []
 
-    def flaky_load():
+    def flaky_load(run_id=None):
+        received_run_ids.append(run_id)
         attempts["count"] += 1
+
         if attempts["count"] == 1:
-            raise sqlite3.OperationalError("temporary database is locked")
+            raise sqlite3.OperationalError(
+                "temporary database is locked"
+            )
 
     monkeypatch.setattr(run_pipeline, "load_data", flaky_load)
-    run_pipeline._load_with_retry(max_attempts=2, retry_delay=0)
+
+    run_pipeline._load_with_retry(
+        "test-run-id",
+        max_attempts=2,
+        retry_delay=0
+    )
 
     assert attempts["count"] == 2
+    assert received_run_ids == ["test-run-id", "test-run-id"]
 
 def test_pipeline_writes_run_id_and_operational_metrics(tmp_path, monkeypatch):
     write_valid_inputs(tmp_path)
     monkeypatch.chdir(tmp_path)
+
+    received_run_ids = []
+
     monkeypatch.setattr(run_pipeline, "validate_data", lambda: True)
-    monkeypatch.setattr(run_pipeline, "_load_with_retry", lambda: None)
-    monkeypatch.setattr(run_pipeline, "sales_analysis", lambda: None)
-    monkeypatch.setattr(run_pipeline, "reconcile_data", lambda: True)
+
+    monkeypatch.setattr(
+        run_pipeline,
+        "_load_with_retry",
+        lambda run_id: received_run_ids.append(run_id)
+    )
+
+    def fake_sales_analysis():
+        reports = tmp_path / "reports"
+        reports.mkdir(exist_ok=True)
+        (reports / "sales_analysis.pending.csv").write_text(
+            "category,total_sales\nBooks,100\n",
+            encoding="utf-8"
+        )
+
+    def fake_reconciliation():
+        reports = tmp_path / "reports"
+        reports.mkdir(exist_ok=True)
+        (reports / "reconciliation_report.pending.csv").write_text(
+            "check,status\ntotal_sales,PASS\n",
+            encoding="utf-8"
+        )
+        return True
+
+    monkeypatch.setattr(
+        run_pipeline, "sales_analysis", fake_sales_analysis
+    )
+    monkeypatch.setattr(
+        run_pipeline, "reconcile_data", fake_reconciliation
+    )
 
     assert run_pipeline.run_pipeline() is True
 
     history = pd.read_csv(tmp_path / "reports" / "pipeline_runs.csv")
+
     assert len(history) == 1
     assert history.loc[0, "run_id"]
+    assert received_run_ids[0] == history.loc[0, "run_id"]
     assert history.loc[0, "start_time"]
     assert history.loc[0, "end_time"]
     assert history.loc[0, "status"] == "SUCCESS"
     assert "rejected_count" in history.columns
     assert "failure_reason" in history.columns
-
 
 def test_validator_quarantines_duplicate_primary_keys(tmp_path, monkeypatch):
     data = write_valid_inputs(tmp_path)
@@ -178,6 +219,7 @@ def test_validator_quarantines_duplicate_primary_keys(tmp_path, monkeypatch):
     rejected = pd.read_csv(data / "quarantine" / "rejected_customers.csv")
     assert len(rejected) == 2
     assert rejected["reject_reason"].str.contains("Duplicate ID").all()
+
 
 def test_pipeline_resumes_from_failed_stage(tmp_path, monkeypatch):
     write_valid_inputs(tmp_path)
@@ -194,16 +236,31 @@ def test_pipeline_resumes_from_failed_stage(tmp_path, monkeypatch):
         calls["validation"] += 1
         return True
 
-    def fake_loading():
+    def fake_loading(run_id):
         calls["loading"] += 1
 
     def flaky_sales_analysis():
         calls["sales"] += 1
+
         if calls["sales"] == 1:
             raise RuntimeError("Simulated sales analysis failure")
 
+        reports = tmp_path / "reports"
+        reports.mkdir(exist_ok=True)
+        (reports / "sales_analysis.pending.csv").write_text(
+            "category,total_sales\nBooks,100\n",
+            encoding="utf-8"
+        )
+
     def fake_reconciliation():
         calls["reconciliation"] += 1
+
+        reports = tmp_path / "reports"
+        reports.mkdir(exist_ok=True)
+        (reports / "reconciliation_report.pending.csv").write_text(
+            "check,status\ntotal_sales,PASS\n",
+            encoding="utf-8"
+        )
         return True
 
     monkeypatch.setattr(run_pipeline, "validate_data", fake_validation)
@@ -214,11 +271,11 @@ def test_pipeline_resumes_from_failed_stage(tmp_path, monkeypatch):
     # First run fails during sales analysis.
     assert run_pipeline.run_pipeline() is False
 
-    # Second run should resume from sales analysis.
+    # Second run reruns the pipeline successfully.
     assert run_pipeline.run_pipeline() is True
 
-    assert calls["validation"] == 1
-    assert calls["loading"] == 1
+    assert calls["validation"] == 2
+    assert calls["loading"] == 2
     assert calls["sales"] == 2
     assert calls["reconciliation"] == 1
 
@@ -307,5 +364,25 @@ def test_existing_order_is_updated_when_corrected(tmp_path, monkeypatch):
             "SELECT quantity FROM orders WHERE order_id = 1"
         ).fetchone()[0]
         assert quantity == 5
+    finally:
+        connection.close()
+
+def test_database_history_uses_pipeline_run_id(tmp_path, monkeypatch):
+    write_valid_inputs(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    expected_run_id = "test-pipeline-run-123"
+
+    load_data(run_id=expected_run_id)
+
+    connection = sqlite3.connect("yottaflex.db")
+    try:
+        saved_run_ids = {
+            row[0] for row in connection.execute(
+                "SELECT DISTINCT run_id FROM source_record_history"
+            ).fetchall()
+        }
+
+        assert saved_run_ids == {expected_run_id}
     finally:
         connection.close()

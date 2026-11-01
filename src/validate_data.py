@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 
@@ -87,7 +88,22 @@ def validate_data():
         missing_mask = df[required_columns[name]].isnull().any(axis=1)
         add_rejections(name, df, missing_mask, "Missing required value")
 
-    # Duplicate IDs
+    # Blank text checks
+    text_columns = {
+        "customers": ["customer_name", "city"],
+        "products": ["product_name", "category"]
+    }
+
+    for name, columns in text_columns.items():
+        df = datasets[name]
+
+        for column in columns:
+            blank_mask = df[column].astype("string").str.strip().eq("")
+            add_rejections(
+                name, df, blank_mask, f"Blank value in {column}"
+            )
+
+    # ID checks: IDs must be positive whole numbers
     id_columns = {
         "customers": "customer_id",
         "products": "product_id",
@@ -96,12 +112,27 @@ def validate_data():
 
     for name, id_column in id_columns.items():
         df = datasets[name]
+        numeric_ids = pd.to_numeric(df[id_column], errors="coerce")
+
+        invalid_id_mask = (
+            numeric_ids.isna()
+            | ~np.isfinite(numeric_ids)
+            | (numeric_ids <= 0)
+            | (numeric_ids % 1 != 0)
+        )
+
+        add_rejections(name, df, invalid_id_mask, "Invalid ID")
+
         duplicate_mask = df[id_column].duplicated(keep=False)
         add_rejections(name, df, duplicate_mask, "Duplicate ID")
 
     # Product price checks
     product_prices = pd.to_numeric(products["price"], errors="coerce")
-    invalid_prices = product_prices.isna() | (product_prices <= 0)
+    invalid_prices = (
+        product_prices.isna()
+        | ~np.isfinite(product_prices)
+        | (product_prices <= 0)
+    )
     add_rejections(
         "products", products, invalid_prices, "Invalid product price"
     )
@@ -109,12 +140,14 @@ def validate_data():
     # Order quantity checks
     order_quantities = pd.to_numeric(orders["quantity"], errors="coerce")
     invalid_quantities = (
-        order_quantities.isna() | (order_quantities <= 0)
+        order_quantities.isna()
+        | ~np.isfinite(order_quantities)
+        | (order_quantities <= 0)
+        | (order_quantities % 1 != 0)
     )
     add_rejections(
         "orders", orders, invalid_quantities, "Invalid order quantity"
     )
-
     # Order date checks
     parsed_dates = pd.to_datetime(orders["order_date"], errors="coerce")
     invalid_dates = parsed_dates.isna()

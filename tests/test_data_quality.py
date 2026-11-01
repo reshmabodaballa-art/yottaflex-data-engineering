@@ -96,3 +96,70 @@ def test_validation_saves_invalid_products_to_quarantine(
 
     rejected = pd.read_csv(rejected_file)
     assert "Invalid product price" in rejected["reject_reason"].iloc[0]
+
+def test_infinite_product_price_is_rejected(tmp_path, monkeypatch):
+    data_folder = tmp_path / "data"
+    data_folder.mkdir()
+
+    pd.DataFrame({
+        "customer_id": [1],
+        "customer_name": ["Test Customer"],
+        "city": ["Hyderabad"]
+    }).to_csv(data_folder / "customers.csv", index=False)
+
+    pd.DataFrame({
+        "product_id": [1],
+        "product_name": ["Test Product"],
+        "category": ["Electronics"],
+        "price": [float("inf")]
+    }).to_csv(data_folder / "products.csv", index=False)
+
+    pd.DataFrame({
+        "order_id": [1],
+        "customer_id": [1],
+        "product_id": [1],
+        "quantity": [2],
+        "order_date": ["2026-01-10"]
+    }).to_csv(data_folder / "orders.csv", index=False)
+
+    monkeypatch.chdir(tmp_path)
+
+    result = validate_data()
+
+    assert result is False
+    rejected_file = data_folder / "quarantine" / "rejected_products.csv"
+    assert rejected_file.exists()
+
+
+def test_fractional_order_quantity_is_rejected(tmp_path, monkeypatch):
+    data_folder = tmp_path / "data"
+    data_folder.mkdir()
+
+    pd.DataFrame({
+        "customer_id": [1],
+        "customer_name": ["Test Customer"],
+        "city": ["Hyderabad"]
+    }).to_csv(data_folder / "customers.csv", index=False)
+
+    pd.DataFrame({
+        "product_id": [1],
+        "product_name": ["Test Product"],
+        "category": ["Electronics"],
+        "price": [100]
+    }).to_csv(data_folder / "products.csv", index=False)
+
+    pd.DataFrame({
+        "order_id": [1],
+        "customer_id": [1],
+        "product_id": [1],
+        "quantity": [1.5],
+        "order_date": ["2026-01-10"]
+    }).to_csv(data_folder / "orders.csv", index=False)
+
+    monkeypatch.chdir(tmp_path)
+
+    result = validate_data()
+
+    assert result is False
+    rejected_file = data_folder / "quarantine" / "rejected_orders.csv"
+    assert rejected_file.exists()
