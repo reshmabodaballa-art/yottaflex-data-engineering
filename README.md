@@ -1,12 +1,10 @@
-
-
 # YottaFlex Data Engineering Challenge
 
 ## 1. Project Overview
 
-This project implements a data engineering pipeline using Python and SQLite. It processes customer, product, and order data, performs data validation, loads records into a database, generates sales analysis, and produces reconciliation reports.
+This project implements a local data engineering pipeline using Python and SQLite. It processes customer, product, and order data, performs data validation, loads records into a database, generates sales analysis, and produces reconciliation reports.
 
-The project focuses on data quality, reliable processing, database idempotency, operational monitoring, and performance optimization.
+The project focuses on data quality, reliable processing, database idempotency, error recovery, operational monitoring, and performance optimization.
 
 ## 2. Technologies Used
 
@@ -23,9 +21,6 @@ The project focuses on data quality, reliable processing, database idempotency, 
 yottaflex-data-engineering/
 │
 ├── data/
-│   ├── customers.csv
-│   ├── products.csv
-│   └── orders.csv
 │
 ├── docs/
 │   ├── architecture.md
@@ -43,12 +38,14 @@ yottaflex-data-engineering/
 │   ├── __init__.py
 │   ├── checkpoint_manager.py
 │   ├── generate_data.py
+│   ├── generate_orders.py
+│   ├── generate_products.py
 │   ├── load_database.py
-│   ├── run_pipeline.py
-│   ├── validate_data.py
-│   ├── sales_analysis.py
+│   ├── performance_benchmark.py
 │   ├── reconciliation.py
-│   └── performance_benchmark.py
+│   ├── run_pipeline.py
+│   ├── sales_analysis.py
+│   └── validate_data.py
 │
 ├── tests/
 │   ├── test_checkpoint_manager.py
@@ -58,14 +55,56 @@ yottaflex-data-engineering/
 │   └── test_pipeline_operations.py
 │
 ├── requirements.txt
+├── PROMPT_HISTORY.txt
 └── README.md
 ```
 
-## 4. Pipeline Workflow
+## 4. Setup and Execution
+
+### Prerequisites
+
+- Python 3.10 or later
+- Git
+
+### Clone the repository
+
+```bash
+git clone https://github.com/reshmabodaballa-art/yottaflex-data-engineering.git
+cd yottaflex-data-engineering
+```
+
+### Create and activate a virtual environment (Windows)
+
+```cmd
+python -m venv venv
+venv\Scripts\activate
+```
+
+### Install dependencies
+
+```cmd
+pip install -r requirements.txt
+```
+
+### Run the pipeline
+
+```cmd
+python src\run_pipeline.py
+```
+
+### Run automated tests
+
+```cmd
+pytest -v
+```
+
+The project was tested from a fresh GitHub clone. The pipeline executed successfully, and all 35 automated tests passed.
+
+## 5. Pipeline Workflow
 
 The pipeline follows these steps:
 
-1. Read customer, product, and order CSV files.
+1. Generate or read customer, product, and order CSV files.
 2. Validate input data and required fields.
 3. Identify invalid and duplicate records.
 4. Load valid records into SQLite.
@@ -74,7 +113,7 @@ The pipeline follows these steps:
 7. Record pipeline execution details.
 8. Generate reports.
 
-## 5. Data Quality and Validation
+## 6. Data Quality and Validation
 
 The validation process checks:
 
@@ -87,33 +126,39 @@ The validation process checks:
 
 Invalid records are handled separately from valid records to protect the database from incorrect data.
 
-## 6. Database Design
+The pipeline also handles empty input batches and unexpected schema changes.
+
+## 7. Database Design
 
 SQLite is used to store the processed data.
 
 The database contains customer, product, and order information with primary key and foreign key relationships.
 
-The pipeline uses database transactions to maintain data consistency.
+Database transactions help maintain data consistency during loading and processing.
 
-## 7. Idempotency
+## 8. Idempotency
 
 The pipeline uses database operations designed to prevent duplicate records when the same input data is processed again.
 
 Database constraints and conflict-handling logic help maintain consistency across repeated executions.
 
-## 8. Error Handling and Retry
+SHA-256 input fingerprinting and stage-level checkpoints help identify previously processed input and completed pipeline stages.
+
+## 9. Error Handling and Retry
 
 The pipeline includes error handling for invalid input and database operations.
 
 Database transactions support rollback when processing fails. Transient SQLite database errors are handled using retry logic.
 
-## 9. Sales Analysis
+A failed pipeline can resume from the last successfully completed stage when the corresponding checkpoint is available.
+
+## 10. Sales Analysis
 
 The pipeline generates sales analysis using customer, product, and order data.
 
 The analysis includes product and sales-related summaries and is saved as a CSV report.
 
-## 10. Data Reconciliation
+## 11. Data Reconciliation
 
 The pipeline generates reconciliation results to compare processed data and expected totals.
 
@@ -124,9 +169,9 @@ The reconciliation report includes checks for:
 - Order record counts.
 - Total sales amount.
 
-## 11. Automated Testing Results
+## 12. Automated Testing Results
 
-The project includes automated tests for data quality, database idempotency, and pipeline operations.
+The project includes automated tests for data quality, database idempotency, checkpoint management, and pipeline operations.
 
 **Test execution command:**
 
@@ -134,9 +179,10 @@ The project includes automated tests for data quality, database idempotency, and
 pytest -v
 ```
 
-**Result:** 35 tests passed, 0 failed.
+**Verified result: 35 tests passed, 0 failed.**
 
 The test suite covers:
+
 - Checkpoint fingerprint generation and recovery.
 - Synthetic data generation and reproducibility.
 - Data quality and validation.
@@ -144,51 +190,49 @@ The test suite covers:
 - Retry handling and operational metrics.
 - Historical backfill and date validation.
 - Late-arriving orders and corrected records.
-
-Additional test scenarios include:
-
 - Unexpected schema changes.
 - Malformed CSV files.
 - Empty input batches.
 - Missing required values.
 - Invalid foreign key references.
 - Out-of-order dates.
-- Transaction rollback and retry.
-- Transient database errors.
-- Pipeline run tracking and operational metrics.
 - Duplicate primary key quarantine.
 
-## 12. Pipeline Execution and Reconciliation Results
+## 13. Pipeline Execution and Reconciliation Results
 
-The pipeline was executed successfully.
+The pipeline was executed successfully from a fresh clone of the public GitHub repository.
 
-**Latest successful execution:**
+**Latest verified fresh-clone execution:**
 
-- Run ID: `a133a8ad-5373-4df3-93c8-6a95d12a0115`
+- Run ID: `0cb641a4-6875-4318-8093-50a667f4dec0`
 - Customers processed: 10
 - Products processed: 100
 - Orders processed: 100,000
 - Rejected records: 0
 - Total sales: 779,133,939.72
 - Reconciliation: All 4 checks passed.
+- Pipeline status: SUCCESS
 
 Pipeline execution details are stored in `reports/pipeline_runs.csv`.
 
-## 13. Idempotency, Retry, and Design Decisions
+## 14. Checkpoints, Recovery, and Design Decisions
 
-The pipeline uses database transactions to protect data consistency during processing.
+The project implements SHA-256 input fingerprinting and stage-level checkpoints for:
 
-If an invalid operation occurs, the transaction can be rolled back. Retry logic is also included for transient SQLite database errors.
+- Data validation.
+- Database loading.
+- Sales analysis.
+- Data reconciliation.
 
-Pipeline execution details are recorded using a run ID and operational metrics.
+Completed stages can be skipped when the same input is processed again.
 
-The project implements SHA-256 input fingerprinting and stage-level checkpoints for validation, database loading, sales analysis, and reconciliation.
+The database supports historical order loading, late-arriving orders, and updates to corrected records.
 
-Completed stages are skipped when the same input is processed again. The database supports historical order backfills, late-arriving orders, and updates to corrected records.
+The loader supports historical order-date filtering. However, date-range backfill parameters are not fully exposed through the complete pipeline interface.
 
-A failed pipeline can resume from the last successfully completed stage.
+Checkpoint fingerprints are based on source CSV inputs rather than individual backfill date ranges.
 
-## 14. Output Files
+## 15. Output Files
 
 The pipeline generates the following reports:
 
@@ -199,7 +243,7 @@ The pipeline generates the following reports:
 - `automated_test_report.txt` – Automated testing results.
 - `performance_report.txt` – Performance benchmark results.
 
-## 15. Performance Benchmark
+## 16. Performance Benchmark
 
 A performance benchmark compares a baseline SQL JOIN and GROUP BY query with a precomputed summary-table read.
 
@@ -214,9 +258,18 @@ A performance benchmark compares a baseline SQL JOIN and GROUP BY query with a p
 
 The benchmark demonstrates faster repeated reads using a precomputed summary. The summary must be refreshed when the underlying order or price data changes.
 
-## 16. Limitations and Future Improvements
+These results represent a local benchmark and may vary with hardware, database size, and workload.
+
+## 17. Limitations and Future Improvements
 
 The current implementation is designed as a local Python and SQLite solution.
+
+Current limitations include:
+
+- The complete pipeline does not expose date-range backfill parameters.
+- Checkpoint fingerprints are based on source CSV files, not backfill date ranges.
+- The solution does not include a production cloud orchestration platform.
+- Performance results are based on a local benchmark.
 
 Potential future improvements include:
 
@@ -226,9 +279,29 @@ Potential future improvements include:
 - Improved scalability for larger production workloads.
 - More detailed row-level reconciliation and audit dashboards.
 
-## 17. Author
+## 18. AI Assistance Disclosure
+
+ChatGPT (OpenAI) was used as an AI assistance tool during project development.
+
+AI assistance was used for:
+
+- Understanding the challenge requirements.
+- Planning the pipeline structure.
+- Coding guidance and debugging.
+- Improving validation and automated tests.
+- Reviewing error handling and recovery approaches.
+- Preparing project documentation.
+
+**My contribution and verification:**
+
+I reviewed the suggested code, worked through implementation and debugging, executed the pipeline, checked the generated outputs, and ran the automated test suite.
+
+The project was tested from a fresh GitHub clone, with 35 automated tests passing.
+
+The file `PROMPT_HISTORY.txt` documents the AI assistance used during development. Its current entries are summaries of the prompts rather than a complete verbatim transcript of every prompt.
+
+## 19. Author
 
 **Reshma Bodaballa**
 
 B.Tech – Computer Science and Engineering
-
