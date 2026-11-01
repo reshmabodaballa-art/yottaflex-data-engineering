@@ -1,22 +1,33 @@
-
 import sqlite3
 import subprocess
 import sys
 
 
-def test_database_loading_is_idempotent():
+def get_database_snapshot():
     connection = sqlite3.connect("yottaflex.db")
 
-    tables = ["customers", "products", "orders"]
+    try:
+        tables = {
+            "customers": "customer_id",
+            "products": "product_id",
+            "orders": "order_id"
+        }
 
-    before_counts = {}
+        snapshot = {}
 
-    for table in tables:
-        before_counts[table] = connection.execute(
-            f"SELECT COUNT(*) FROM {table}"
-        ).fetchone()[0]
+        for table, primary_key in tables.items():
+            snapshot[table] = connection.execute(
+                f"SELECT * FROM {table} ORDER BY {primary_key}"
+            ).fetchall()
 
-    connection.close()
+        return snapshot
+
+    finally:
+        connection.close()
+
+
+def test_database_loading_is_idempotent():
+    before_snapshot = get_database_snapshot()
 
     subprocess.run(
         [sys.executable, "src/load_database.py"],
@@ -25,15 +36,6 @@ def test_database_loading_is_idempotent():
         text=True
     )
 
-    connection = sqlite3.connect("yottaflex.db")
+    after_snapshot = get_database_snapshot()
 
-    after_counts = {}
-
-    for table in tables:
-        after_counts[table] = connection.execute(
-            f"SELECT COUNT(*) FROM {table}"
-        ).fetchone()[0]
-
-    connection.close()
-
-    assert before_counts == after_counts
+    assert before_snapshot == after_snapshot
