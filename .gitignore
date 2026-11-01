@@ -5,3 +5,5 @@ __pycache__/
 yottaflex_backup.db
 *_backup.csv
 *_backup.pyyottaflex.db
+ 
+yottaflex.db
