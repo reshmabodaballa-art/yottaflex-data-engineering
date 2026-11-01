@@ -1,24 +1,29 @@
-YottaFlex AI - SQL Performance Report
+YottaFlex AI - SQL Performance Benchmark
 
-Dataset:
-Orders: 100,000 records
-Products: 100 records
+Workload:
+- 100,000 orders joined to 100 products.
+- Group sales by product category.
+- 25 timed repetitions after one warm-up execution.
+- Median query time is reported to reduce timing noise.
 
-SQL Query:
-Sales analysis by product category using JOIN, GROUP BY and ORDER BY.
+Baseline:
+- Execute JOIN + GROUP BY against the detailed orders and products tables.
+- Median query time: 0.080874 seconds.
 
-Performance Test:
+Optimization:
+- Refresh a materialized category_sales_summary table once after loading.
+- Repeated analytical reads query the five pre-aggregated category rows.
+- Summary refresh time: 0.082971 seconds.
+- Median optimized read time: 0.000118 seconds.
 
-With Manual Index:
-Average execution time: 0.2352 seconds
+Measured result:
+- Read-query speedup: 687.71x.
+- Read-query time reduction: 99.85%.
+- Result equivalence: PASS (category totals match to 2 decimal places).
+- Approximate repeated reads needed to recover summary refresh cost: 2.
 
-Without Manual Index:
-Average execution time: 0.0671 seconds
-
-Conclusion:
-The query without the manual index performed faster in our test.
-Therefore, we decided not to use the manual index for this query.
-
-Query Plan:
-SQLite scans the orders table and uses an automatic covering index
-to search matching products.
+Trade-off:
+- The summary must be refreshed after source orders or product prices change.
+- The refresh has an upfront cost; this optimization is most useful when the
+  same category-level report is queried repeatedly.
+- Timings depend on the machine, SQLite version, and cache state.

@@ -1,18 +1,18 @@
-# YottaFlex AI – Data Engineering Pipeline
+
+
+# YottaFlex Data Engineering Challenge
 
 ## 1. Project Overview
 
-This project implements an end-to-end data engineering pipeline using Python, Pandas, SQLite, and SQL.
+This project implements a data engineering pipeline using Python and SQLite. It processes customer, product, and order data, performs data validation, loads records into a database, generates sales analysis, and produces reconciliation reports.
 
-The pipeline works with synthetic customer, product, and order datasets. It validates input data, identifies invalid records, loads valid datasets into a relational database, performs sales analysis, and reconciles source data against database results.
-
-The project focuses on data quality, reproducibility, database integrity, automated testing, safe reruns, and reporting.
+The project focuses on data quality, reliable processing, database idempotency, operational monitoring, and performance optimization.
 
 ## 2. Technologies Used
 
 - Python
-- Pandas
 - SQLite
+- Pandas
 - SQL
 - Pytest
 - Git and GitHub
@@ -25,36 +25,26 @@ yottaflex-data-engineering/
 ├── data/
 │   ├── customers.csv
 │   ├── products.csv
-│   ├── orders.csv
-│   ├── test_data/
-│   │   └── bad_products.csv
-│   └── quarantine/
-│
-├── src/
-│   ├── generate_data.py
-│   ├── generate_products.py
-│   ├── generate_orders.py
-│   ├── validate_data.py
-│   ├── load_database.py
-│   ├── sales_analysis.py
-│   ├── reconciliation.py
-│   └── run_pipeline.py
-│
-├── tests/
-│   ├── test_data_quality.py
-│   └── test_idempotency.py
+│   └── orders.csv
 │
 ├── reports/
-│   ├── validation_report.txt
 │   ├── automated_test_report.txt
 │   ├── performance_report.txt
 │   ├── pipeline_execution_report.txt
-│   ├── pipeline.log
-│   ├── sales_analysis.csv
-│   ├── bad_data_test_report.txt
-│   ├── idempotency_report.txt
-│   ├── data_generator_test_report.txt
-│   └── reconciliation_report.csv
+│   ├── pipeline_runs.csv
+│   ├── reconciliation_report.csv
+│   └── sales_analysis.csv
+│
+├── src/
+│   ├── run_pipeline.py
+│   ├── validate_data.py
+│   ├── sales_analysis.py
+│   └── performance_benchmark.py
+│
+├── tests/
+│   ├── test_data_quality.py
+│   ├── test_idempotency.py
+│   └── test_pipeline_operations.py
 │
 ├── requirements.txt
 ├── README.md
@@ -63,275 +53,158 @@ yottaflex-data-engineering/
 
 ## 4. Pipeline Workflow
 
-The pipeline executes four main stages.
+The pipeline follows these steps:
 
-### Stage 1: Data Validation
+1. Read customer, product, and order CSV files.
+2. Validate input data and required fields.
+3. Identify invalid and duplicate records.
+4. Load valid records into SQLite.
+5. Generate sales analysis.
+6. Perform data reconciliation.
+7. Record pipeline execution details.
+8. Generate reports.
 
-- Checks whether required CSV files and columns are available.
-- Checks missing required values.
-- Detects duplicate customer, product, and order IDs.
-- Validates that product prices are positive.
-- Validates that order quantities are positive.
-- Checks order dates.
-- Checks customer and product foreign-key references.
-- Saves rejected records with rejection reasons in `data/quarantine/`.
+## 5. Data Quality and Validation
 
-**Validation policy:** The current pipeline follows a fail-fast approach. If validation errors or rejected records are found, the pipeline stops before database loading.
+The validation process checks:
 
-### Stage 2: Database Loading
+- Required columns and schema.
+- Missing required values.
+- Invalid data formats.
+- Duplicate primary keys.
+- Invalid foreign key references.
+- Malformed CSV files.
 
-- Loads validated CSV data into SQLite.
-- Uses primary keys and foreign-key constraints.
-- Enables foreign-key checking.
-- Uses `INSERT OR IGNORE` to avoid inserting duplicate primary-key records during reruns.
+Invalid records are handled separately from valid records to protect the database from incorrect data.
 
-### Stage 3: Sales Analysis
+## 6. Database Design
 
-- Joins orders with products.
-- Calculates sales using order quantity multiplied by product price.
-- Groups sales by product category.
-- Exports the results to `reports/sales_analysis.csv`.
+SQLite is used to store the processed data.
 
-### Stage 4: Data Reconciliation
+The database contains customer, product, and order information with primary key and foreign key relationships.
 
-- Compares source CSV record counts with database record counts.
-- Compares total sales calculated from source data with database sales.
-- Generates `reports/reconciliation_report.csv`.
-- Reports PASS or FAIL for each reconciliation check.
+The pipeline uses database transactions to maintain data consistency.
 
-## 5. System Architecture
+## 7. Idempotency
 
-The project follows an ETL-style workflow with a final reconciliation stage.
+The pipeline uses database operations designed to prevent duplicate records when the same input data is processed again.
 
-```text
-Synthetic Data Generation
-          |
-          v
-     CSV Input Files
-          |
-          v
-     Data Validation
-          |
-          v
-    SQLite Database
-          |
-          v
-     Sales Analysis
-          |
-          v
-   Data Reconciliation
-          |
-          v
-      Output Reports
-```
+Database constraints and conflict-handling logic help maintain consistency across repeated executions.
 
-## 6. Installation and Execution
+## 8. Error Handling and Retry
 
-### Step 1: Clone the repository
+The pipeline includes error handling for invalid input and database operations.
 
-```bash
-git clone https://github.com/reshmabodaballa-art/yottaflex-data-engineering.git
-cd yottaflex-data-engineering
-```
+Database transactions support rollback when processing fails. Transient SQLite database errors are handled using retry logic.
 
-### Step 2: Create a virtual environment
+## 9. Sales Analysis
 
-```bash
-python -m venv venv
-```
+The pipeline generates sales analysis using customer, product, and order data.
 
-### Step 3: Activate the environment
+The analysis includes product and sales-related summaries and is saved as a CSV report.
 
-Windows:
+## 10. Data Reconciliation
 
-```bash
-venv\Scripts\activate
-```
+The pipeline generates reconciliation results to compare processed data and expected totals.
 
-### Step 4: Install dependencies
+The reconciliation report includes checks for:
 
-```bash
-pip install -r requirements.txt
-```
+- Customer record counts.
+- Product record counts.
+- Order record counts.
+- Total sales amount.
 
-### Step 5: Run the complete pipeline
+## 11. Automated Testing Results
 
-```bash
-python src/run_pipeline.py
-```
+The project includes automated tests for data quality, database idempotency, and pipeline operations.
 
-### Step 6: Run automated tests
+**Test execution command:**
 
 ```bash
 pytest -v
 ```
 
-## 7. Synthetic Data Generation
+**Result:** 18 tests passed.
 
-The project includes generators for customers, products, and orders. Fixed random seeds support reproducible synthetic datasets.
+Additional test scenarios include:
 
-Example commands:
-
-```bash
-python src/generate_data.py --num-customers 10 --seed 42
-
-python src/generate_products.py --num-products 100 --seed 42
-
-python src/generate_orders.py --num-orders 100000 --num-customers 10 --num-products 100 --seed 42
-```
-
-**Important:** Run generators carefully because they overwrite their corresponding CSV files. Generate matching customer and product datasets before generating orders, because orders reference customer and product IDs.
-
-## 8. Dataset Details
-
-The current sample datasets contain:
-
-| Dataset | Records |
-|---|---:|
-| Customers | 10 |
-| Products | 100 |
-| Orders | 100,000 |
-
-These are synthetic records created for testing and demonstration.
-
-## 9. Data Dictionary
-
-### Customers
-
-| Column | Data Type | Description |
-|---|---|---|
-| customer_id | Integer | Unique customer identifier and primary key |
-| customer_name | Text | Customer name |
-| city | Text | Customer city |
-
-### Products
-
-| Column | Data Type | Description |
-|---|---|---|
-| product_id | Integer | Unique product identifier and primary key |
-| product_name | Text | Product name |
-| category | Text | Product category |
-| price | Numeric | Product price; must be greater than zero |
-
-### Orders
-
-| Column | Data Type | Description |
-|---|---|---|
-| order_id | Integer | Unique order identifier and primary key |
-| customer_id | Integer | Customer reference |
-| product_id | Integer | Product reference |
-| quantity | Integer | Number of items ordered; must be greater than zero |
-| order_date | Date | Date of the order |
-
-### Relationships
-
-- One customer can be associated with multiple orders.
-- One product can be associated with multiple orders.
-- Each order references a customer and a product.
-- `customer_id` and `product_id` in the orders dataset are foreign-key references.
-
-## 10. Data Quality and Quarantine
-
-The project includes `data/test_data/bad_products.csv` to demonstrate data-quality checks.
-
-The sample contains five records, including negative and zero prices and a duplicate product ID.
-
-The validation process identifies invalid records and saves them in the quarantine folder with:
-
-- Original record information.
-- Source filename.
-- Rejection reason.
-
-A record that violates multiple checks can have multiple rejection reasons.
-
-The current validator stops the pipeline when rejected records are found; it does not load the remaining accepted records from that batch.
-
-## 11. Testing Results
-
-Automated tests are performed using Pytest.
-
-Latest recorded test execution:
-
-| Result | Count |
-|---|---:|
-| Total tests | 8 |
-| Passed | 8 |
-| Failed | 0 |
-
-Tests cover:
-
-- Negative and zero product prices.
-- Duplicate product IDs.
-- Empty datasets.
-- Missing product names.
-- Invalid order quantities.
-- Invalid order dates.
-- Saving invalid product records to quarantine.
-- Database loading idempotency.
-
-Command used:
-
-```bash
-pytest -v
-```
+- Unexpected schema changes.
+- Malformed CSV files.
+- Empty input batches.
+- Missing required values.
+- Invalid foreign key references.
+- Out-of-order dates.
+- Transaction rollback and retry.
+- Transient database errors.
+- Pipeline run tracking and operational metrics.
+- Duplicate primary key quarantine.
 
 ## 12. Pipeline Execution and Reconciliation Results
 
-The complete pipeline was executed successfully.
+The pipeline was executed successfully.
 
-Latest recorded execution:
+**Latest successful execution:**
 
-- Data validation: Passed.
-- Database loading: Passed.
-- Sales analysis: Passed.
-- Data reconciliation: Passed.
-- Total execution time: Approximately 0.4989 seconds.
+- Run ID: `a133a8ad-5373-4df3-93c8-6a95d12a0115`
+- Customers processed: 10
+- Products processed: 100
+- Orders processed: 100,000
+- Rejected records: 0
+- Total sales: 779,133,939.72
+- Reconciliation: All 4 checks passed.
 
-Latest reconciliation results:
+Pipeline execution details are stored in `reports/pipeline_runs.csv`.
 
-| Check | Source Value | Database Value | Status |
-|---|---:|---:|---|
-| Customers count | 10 | 10 | PASS |
-| Products count | 100 | 100 | PASS |
-| Orders count | 100,000 | 100,000 | PASS |
-| Total sales | 779,133,939.72 | 779,133,939.72 | PASS |
+## 13. Idempotency, Retry, and Design Decisions
 
-Reconciliation compares row counts and aggregate sales. It does not compare every individual source record.
+The pipeline uses database transactions to protect data consistency during processing.
 
-## 13. Idempotency and Design Decisions
+If an invalid operation occurs, the transaction can be rolled back. Retry logic is also included for transient SQLite database errors.
 
-- **SQLite:** Used as a lightweight relational database.
-- **Pandas:** Used for CSV reading, validation, transformation, and reporting.
-- **Primary and foreign keys:** Help maintain relational integrity.
-- **Fixed random seed:** Supports reproducible synthetic data generation.
-- **INSERT OR IGNORE:** Prevents duplicate primary-key insertions during repeated database loads.
-- **Pytest:** Automates data-quality and idempotency checks.
+Pipeline execution details are recorded using a run ID and operational metrics.
 
-The current loading strategy ignores records whose primary keys already exist. It does not update existing database records when their source values change. Therefore, changed source records require an explicit update or reload strategy.
+**Current limitation:** The project does not implement a complete automated checkpoint-based recovery and historical backfill mechanism.
 
 ## 14. Output Files
 
-| File | Purpose |
-|---|---|
-| `yottaflex.db` | SQLite database |
-| `reports/sales_analysis.csv` | Sales by product category |
-| `reports/reconciliation_report.csv` | Source-to-database reconciliation results |
-| `reports/pipeline.log` | Pipeline execution logs and errors |
-| `data/quarantine/` | Rejected records and rejection reasons |
-| `reports/validation_report.txt` | Validation report, if generated |
-| `reports/automated_test_report.txt` | Test report, if generated |
-| `reports/performance_report.txt` | Performance comparison report |
-| `reports/pipeline_execution_report.txt` | Pipeline execution report |
+The pipeline generates the following reports:
 
-## 15. Current Limitations and Future Improvements
+- `sales_analysis.csv` – Sales analysis results.
+- `reconciliation_report.csv` – Data reconciliation results.
+- `pipeline_runs.csv` – Pipeline execution history.
+- `pipeline_execution_report.txt` – Pipeline execution summary.
+- `automated_test_report.txt` – Automated testing results.
+- `performance_report.txt` – Performance benchmark results.
 
-- Add persistent run metadata with unique run IDs, start and end timestamps, status, and row counts.
-- Improve partial-failure recovery, retries, and backfill handling.
-- Add stronger schema-change detection and data-type validation.
-- Expand tests for malformed files, invalid foreign keys, and additional domain-specific cases.
-- Compare individual source and target records in addition to aggregate reconciliation.
-- Evaluate further performance optimizations through repeatable benchmarks.
+## 15. Performance Benchmark
 
-## 16. Author
+A performance benchmark compares a baseline SQL JOIN and GROUP BY query with a precomputed summary-table read.
 
-Developed as an individual data engineering project for the YottaFlex AI assessment.
+**Benchmark results:**
+
+- Baseline query median: 0.080874 seconds.
+- Summary refresh: 0.082971 seconds.
+- Optimized read: 0.000118 seconds.
+- Reported read speedup: 687.71x.
+- Reported read-time reduction: 99.85%.
+- Result equivalence: PASS.
+
+The benchmark demonstrates faster repeated reads using a precomputed summary. The summary must be refreshed when the underlying order or price data changes.
+
+## 16. Limitations and Future Improvements
+
+Potential future improvements include:
+
+- Automated checkpoint-based recovery.
+- Historical data backfilling.
+- Improved handling of late-arriving records.
+- Row-level reconciliation.
+- Cloud-based storage and orchestration.
+- Pipeline monitoring and alerting.
+
+## 17. Author
+
+**Reshma Bodaballa**
+
+B.Tech – Computer Science and Engineering
+

@@ -2,25 +2,30 @@
 
 **Testing Framework:** Pytest
 
-**Test Files:**
-- tests/test_data_quality.py
-- tests/test_idempotency.py
+**Test command:** `pytest -v`
 
 ## Test Results
 
-1. test_negative_and_zero_prices - PASSED
-2. test_duplicate_product_ids - PASSED
-3. test_empty_dataset - PASSED
-4. test_missing_product_name - PASSED
-5. test_invalid_order_quantity - PASSED
-6. test_invalid_order_dates - PASSED
-7. test_database_loading_is_idempotent - PASSED
+| Result | Count |
+|---|---:|
+| Total tests | 18 |
+| Passed | 18 |
+| Failed | 0 |
 
-## Summary
+## Coverage
 
-- Total Tests: 7
-- Passed: 7
-- Failed: 0
-- Execution Time: 3.09 seconds
+- Product price boundaries and duplicate product IDs.
+- Empty datasets and missing required product values.
+- Invalid order quantities and dates.
+- Quarantine output and rejection reasons.
+- Database loading idempotency.
+- Malformed CSV files and unexpected schema columns.
+- Empty batches, missing required values, duplicate primary keys, and invalid foreign-key references.
+- Acceptance of valid out-of-order order dates.
+- Transaction rollback after a failed load, followed by a corrected retry.
+- Retry after a simulated transient SQLite operational error.
+- Recording a unique run ID and operational metrics.
 
-**Conclusion:** All seven automated tests passed successfully. The tests cover data-quality validation and database idempotency.
+**Latest local verification:** 18 tests passed. Execution time: 4.39 seconds.
+
+The tests demonstrate the listed cases; they do not represent a full production-scale orchestration or backfill system.

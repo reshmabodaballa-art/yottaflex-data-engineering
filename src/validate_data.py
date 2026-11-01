@@ -7,6 +7,9 @@ def validate_data():
     data_folder = Path("data")
     quarantine_folder = data_folder / "quarantine"
     quarantine_folder.mkdir(parents=True, exist_ok=True)
+    # Remove only prior validator outputs so rejected_count reflects this run.
+    for old_report in quarantine_folder.glob("rejected_*.csv"):
+        old_report.unlink()
 
     required_columns = {
         "customers": ["customer_id", "customer_name", "city"],
@@ -38,11 +41,17 @@ def validate_data():
             continue
 
         missing_columns = set(columns) - set(df.columns)
+        unexpected_columns = set(df.columns) - set(columns)
 
-        if missing_columns:
-            errors.append(
-                f"Missing columns in {name}.csv: {sorted(missing_columns)}"
-            )
+        if missing_columns or unexpected_columns:
+            if missing_columns:
+                errors.append(
+                    f"Missing columns in {name}.csv: {sorted(missing_columns)}"
+                )
+            if unexpected_columns:
+                errors.append(
+                    f"Unexpected columns in {name}.csv: {sorted(unexpected_columns)}"
+                )
             continue
 
         if df.empty:

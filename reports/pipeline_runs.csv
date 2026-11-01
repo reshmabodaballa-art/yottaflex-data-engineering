@@ -1,0 +1,4 @@
+run_id,start_time,end_time,status,customers_input,products_input,orders_input,customers_output,products_output,orders_output,rejected_count,duration_seconds,failure_reason
+ca8b3d32-e6e4-43b5-a68e-83a545e1539e,2026-11-01T06:20:20+00:00,2026-11-01T06:20:21+00:00,SUCCESS,10,100,100000,10,100,100000,0,0.2778,
+9f3955d1-e538-454e-b7f8-5f8566f7e652,2026-11-01T06:21:21+00:00,2026-11-01T06:21:21+00:00,SUCCESS,10,100,100000,10,100,100000,0,0.2617,
+a133a8ad-5373-4df3-93c8-6a95d12a0115,2026-11-01T06:51:24+00:00,2026-11-01T06:51:25+00:00,SUCCESS,10,100,100000,10,100,100000,0,0.3709,

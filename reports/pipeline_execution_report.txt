@@ -1,41 +1,30 @@
 YottaFlex AI - Pipeline Execution Report
 
+Latest recorded pipeline run:
+Run ID: 9f3955d1-e538-454e-b7f8-5f8566f7e652
+Start time (UTC): 2026-11-01T06:21:21+00:00
+End time (UTC): 2026-11-01T06:21:21+00:00
 Pipeline Status: SUCCESS
+Duration: 0.2617 seconds
 
 Execution Stages:
-
 1. Data Validation - PASSED
 2. Database Loading - PASSED
-3. Sales Analysis - PASSED
+3. Sales Analysis (pre-aggregated category summary) - PASSED
+4. Data Reconciliation - PASSED
 
-Records Processed:
-Customers: 10
-Products: 100
-Orders: 100,000
+Input and database output counts:
+- Customers: 10 / 10
+- Products: 100 / 100
+- Orders: 100,000 / 100,000
+- Rejected records: 0
+- Failure reason: None
 
-Database Loading Time: 0.2260 seconds
+Reconciliation:
+- Customers count: 10 vs 10 - PASS
+- Products count: 100 vs 100 - PASS
+- Orders count: 100,000 vs 100,000 - PASS
+- Total sales: 779,133,939.72 vs 779,133,939.72 - PASS
 
-Output:
-reports/sales_analysis.csv
-
-Conclusion:
-The complete data pipeline executed successfully.
-All datasets passed validation, were loaded into
-SQLite, and were used to generate the sales report.
-
-Rerun Test:
-
-The complete pipeline was executed a second time.
-
-Second Run Database Loading Time: 0.2879 seconds
-
-Second Run Record Counts:
-Customers: 10
-Products: 100
-Orders: 100,000
-
-Rerun Status: PASSED
-
-Conclusion:
-The pipeline completed successfully on both runs.
-Database record counts remained unchanged.
+Operational metrics are appended to reports/pipeline_runs.csv.
+Detailed log messages are written to reports/pipeline.log.
