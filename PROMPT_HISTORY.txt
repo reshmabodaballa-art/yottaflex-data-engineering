@@ -16,3 +16,22 @@ Used AI for guidance on writing automated tests and checking idempotency.
 
 Prompt 5:
 Used AI for guidance on pipeline execution, logging, and documentation.
+
+AI TOOL USED:
+ChatGPT (OpenAI)
+
+HOW I USED AI:
+I used ChatGPT to understand the requirements, plan the pipeline,
+get coding guidance, debug errors, improve automated tests,
+and prepare project documentation.
+
+MY CONTRIBUTION:
+I reviewed the suggested code, ran the project, checked the
+outputs, corrected errors, and verified the pipeline results.
+
+VALIDATION:
+The automated test suite completed with 35 tests passed.
+
+DISCLOSURE:
+The five prompt entries above are summaries of my AI assistance,
+not a complete verbatim record of every prompt used.
